@@ -11,7 +11,7 @@ let package = Package(
         .executable(name: "IKnowBall", targets: ["IKnowBall"])
     ],
     targets: [
-        .target(
+        .executableTarget(
             name: "IKnowBall",
             path: "Sources"
         )

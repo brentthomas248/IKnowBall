@@ -20,7 +20,7 @@ struct HomeView: View {
         }
         .navigationTitle("Home")
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .primaryAction) {
                 Button(action: { /* Navigate to Settings */ }) {
                     Image(systemName: "gearshape")
                         .foregroundColor(.primary)
@@ -139,7 +139,7 @@ private struct GameCard: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 12)
-                .fill(Color(uiColor: .tertiarySystemFill))
+                .fill(.tertiary)
             
             HStack(spacing: .md) {
                 Image(systemName: game.iconName)
@@ -155,7 +155,7 @@ private struct GameCard: View {
                 
                 Image(systemName: "chevron.right")
                     .font(.body)
-                    .foregroundColor(.tertiaryLabel)
+                    .foregroundStyle(.tertiary)
             }
             .padding(.horizontal, .md)
         }
@@ -167,10 +167,7 @@ private struct GameCard: View {
     }
 }
 
-private extension Color {
-    // Helper for semantic system colors that aren't in standard Color
-    static let tertiaryLabel = Color(uiColor: .tertiaryLabel)
-}
+
 
 #Preview {
     NavigationStack {
