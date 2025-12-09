@@ -12,13 +12,16 @@ final class HomeViewModel {
     var state: State = .idle
 
     func loadData() {
+        print("DEBUG: HomeViewModel.loadData() called")
         state = .loading
         
         // Simulate network delay
         Task {
+            print("DEBUG: Simulatiing network delay...")
             try? await Task.sleep(nanoseconds: 1_500_000_000) // 1.5s
             
             // Success simulation
+            print("DEBUG: Network delay finished. Creating data.")
             let user = UserProfile(
                 username: "PlayerOne",
                 level: 5,
