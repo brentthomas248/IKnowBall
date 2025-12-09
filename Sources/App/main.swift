@@ -1,6 +1,5 @@
 import SwiftUI
 
-@main
 struct IKnowBallApp: App {
     var body: some Scene {
         WindowGroup {
@@ -8,3 +7,5 @@ struct IKnowBallApp: App {
         }
     }
 }
+
+IKnowBallApp.main()
