@@ -9,26 +9,28 @@ This repository is designed to be **agent-friendly**. If you are an AI assistant
 
 ## 🏗 Architecture
 
-### Golden Path Structure
-We follow a **Feature-First** directory structure. Do not place files in the root `Sources` directory unless they are app-wide configuration.
+### Modular Architecture
+We follow a strictly modularized architecture with 10 distinct SPM targets.
 
+**Module Hierarchy:**
 ```
 Sources/
-├── App/                 # App Lifecycle & Entry Points
-│   ├── IKnowBallApp.swift
-│   └── ContentView.swift
-├── Features/            # Self-contained feature modules
-│   ├── Home/
-│   │   ├── Views/       # SwiftUI Views
-│   │   ├── ViewModels/  # @Observable classes
-│   │   ├── Models/      # Feature-specific models
-│   │   └── Services/    # Logic & Data fetching
-│   └── Settings/
-│       └── ...
-└── Shared/              # Reusable components & Core extensions
-    ├── DesignSystem/
-    └── Models/
+├── IKnowBallApp/        # @main Entry Point
+├── IKnowBallCore/       # Shared Utilities
+├── IKnowBallDesignSystem/ # UI Tokens & Components (Public)
+├── FeatureHome/         # Dashboard & Routing
+├── FeatureSettings/     # Settings Feature
+├── FeatureGamesShared/  # Shared Game Models (GameItem, GameTile)
+├── FeatureBallKnowledge/# Specific Game Logic
+├── FeatureConnections/  # Specific Game Logic
+├── FeatureOverUnder/    # Specific Game Logic
+└── FeatureScoreSummary/ # Shared Results Screen
 ```
+
+### Dependency Graph
+- **Features** (Home, Games, Settings) depend on **DesignSystem** and **Core**.
+- **Home** depends on all Game Features.
+- **Game Features** depend on **FeatureGamesShared** and **FeatureScoreSummary**.
 
 ### Key Technologies
 *   **UI Framework**: SwiftUI (iOS 17+)

@@ -8,12 +8,67 @@ let package = Package(
         .macOS(.v14)
     ],
     products: [
-        .library(name: "IKnowBallFeature", targets: ["IKnowBallFeature"])
+        .library(name: "IKnowBallApp", targets: ["IKnowBallApp"]),
+        .library(name: "IKnowBallFeature", targets: ["IKnowBallFeature"]), // Main Feature Module
     ],
     targets: [
+        // MARK: - Core & Design
+        .target(
+            name: "IKnowBallCore",
+            dependencies: []
+        ),
+        .target(
+            name: "IKnowBallDesignSystem",
+            dependencies: ["IKnowBallCore"]
+        ),
+        
+        // MARK: - Shared Feature Code
+        .target(
+            name: "FeatureGamesShared",
+            dependencies: ["IKnowBallDesignSystem"]
+        ),
+        
+        // MARK: - Features
+        .target(
+            name: "FeatureBallKnowledge",
+            dependencies: ["FeatureGamesShared", "IKnowBallDesignSystem", "FeatureScoreSummary"]
+        ),
+        .target(
+            name: "FeatureConnections",
+            dependencies: ["FeatureGamesShared", "IKnowBallDesignSystem", "FeatureScoreSummary"]
+        ),
+        .target(
+            name: "FeatureOverUnder",
+            dependencies: ["FeatureGamesShared", "IKnowBallDesignSystem"]
+        ),
+        .target(
+            name: "FeatureScoreSummary",
+            dependencies: ["FeatureGamesShared", "IKnowBallDesignSystem"]
+        ),
+        .target(
+            name: "FeatureSettings",
+            dependencies: ["IKnowBallDesignSystem"]
+        ),
+        
+        // MARK: - Main Feature (Composition)
+        // MARK: - Main Feature (Composition)
         .target(
             name: "IKnowBallFeature",
-            path: "Sources"
+            dependencies: [
+                "FeatureBallKnowledge",
+                "FeatureConnections",
+                "FeatureOverUnder",
+                "FeatureScoreSummary",
+                "FeatureSettings",
+                "IKnowBallDesignSystem"
+            ],
+            path: "Sources/FeatureHome"
+        ),
+        
+        // MARK: - App Entry
+        .target(
+            name: "IKnowBallApp",
+            dependencies: ["IKnowBallFeature"]
         )
     ]
 )
