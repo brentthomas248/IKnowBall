@@ -7,15 +7,12 @@ let package = Package(
         .iOS(.v17)
     ],
     products: [
-        .library(name: "IKnowBall", targets: ["IKnowBall"])
+        .executable(name: "IKnowBall", targets: ["IKnowBall"])
     ],
     targets: [
         .target(
             name: "IKnowBall",
-            path: "Sources",
-            resources: [
-                .process("Shared/DesignSystem/Tokens") // Example of processing resources if needed, but auto-discovery works too
-            ]
+            path: "Sources"
         )
     ]
 )
