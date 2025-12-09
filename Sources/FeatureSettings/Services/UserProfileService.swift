@@ -1,6 +1,6 @@
 import Foundation
 
-public final class UserProfileService: ObservableObject, @unchecked Sendable {
+public final class UserProfileService: ObservableObject, UserProfileServiceProtocol, @unchecked Sendable {
     public static let shared = UserProfileService()
     
     @Published public private(set) var userProfile: UserProfile

@@ -15,12 +15,15 @@ public final class GameDataService: Sendable {
         do {
             let data = try Data(contentsOf: url)
             let decoder = JSONDecoder()
-            // Optional: Handle snake_case to camelCase if needed, but defaults are usually fine if JSON matches
-            // decoder.keyDecodingStrategy = .convertFromSnakeCase 
             let items = try decoder.decode([T].self, from: data)
+            print("✅ GameDataService: Successfully loaded \(items.count) items from \(fileName).json")
             return items
         } catch {
             print("❌ GameDataService: Failed to decode \(fileName).json. Error: \(error)")
+            // Print raw string to debug JSON format issues
+            if let string = try? String(contentsOf: url) {
+                print("📋 Raw JSON content: \(string)")
+            }
             return []
         }
     }
@@ -45,5 +48,10 @@ public final class GameDataService: Sendable {
         case .ballKnowledge:
             return await fetchData(from: "ball_knowledge_questions")
         }
+    }
+    
+    /// Loads the list of available games
+    public func loadGameList() async -> [GameItem] {
+        return await fetchData(from: "games_config")
     }
 }

@@ -1,7 +1,8 @@
 import SwiftUI
+import FeatureGamesShared
 
 struct GameTileView: View {
-    let tile: GameTileModel
+    let tile: BallKnowledgeQuestion
     
     var body: some View {
         ZStack {

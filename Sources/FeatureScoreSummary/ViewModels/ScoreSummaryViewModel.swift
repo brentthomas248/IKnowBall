@@ -26,6 +26,9 @@ final class ScoreSummaryViewModel {
     var xpGained: Int
     var xpRequiredForNextLevel: Int
     
+    // Dependency
+    private let profileService: UserProfileServiceProtocol
+    
     // MARK: - Integration Placeholders
     // These closures would be injected by a coordinator or parent view
     var onReviewAnswers: (() -> Void)?
@@ -71,19 +74,21 @@ final class ScoreSummaryViewModel {
         correctCount: Int = 12,
         missedCount: Int = 3,
         gameDuration: TimeInterval = 60,
-        xpGained: Int = 450
+        xpGained: Int = 450,
+        profileService: UserProfileServiceProtocol = UserProfileService.shared
     ) {
         self.score = score
         self.correctCount = correctCount
         self.missedCount = missedCount
         self.gameDuration = gameDuration
         self.xpGained = xpGained
+        self.profileService = profileService
         
         // Award XP
-        UserProfileService.shared.addXP(xpGained)
+        profileService.addXP(xpGained)
         
         // Read updated state for display
-        let profile = UserProfileService.shared.userProfile
+        let profile = profileService.userProfile
         self.currentXp = Int(profile.currentXP)
         self.xpRequiredForNextLevel = Int(profile.maxXP)
         

@@ -14,15 +14,22 @@ final class ConnectionGameViewModel {
     var showSummary: Bool = false
     
     var tiles: [GameTile] = []
+    var solvedGroups: [SolvedGroup] = []  // NEW: Track solved groups separately
     var mistakesRemaining: Int = 4
+    
+    // Computed Properties
+    var activeTiles: [GameTile] {
+        tiles.filter { !$0.isSolved }
+    }
     
     // Computed Properties
     var canSubmit: Bool {
         selectedTiles.count == 4
     }
     
-    var solvedGroups: Int {
-        tiles.filter { $0.isSolved }.count / 4
+    
+    var solvedGroupsCount: Int {
+        solvedGroups.count
     }
     
     var mistakesMade: Int {
@@ -31,7 +38,7 @@ final class ConnectionGameViewModel {
     
     var score: Int {
         // Simple scoring: 250 points per group, minus 50 per mistake
-        let groupPoints = solvedGroups * 250
+        let groupPoints = solvedGroupsCount * 250
         let penalty = mistakesMade * 50
         return max(0, groupPoints - penalty)
     }
@@ -56,6 +63,7 @@ final class ConnectionGameViewModel {
                 }
                 
                 self.tiles = loadedTiles.shuffled()
+                self.solvedGroups = []  // Reset solved groups
                 self.mistakesRemaining = 4
                 self.state = .playing
                 self.showSummary = false
@@ -97,12 +105,21 @@ final class ConnectionGameViewModel {
         if isMatch {
             // Success: Mark as solved
             HapticManager.shared.notification(type: .success)
+            
+            // Create a SolvedGroup
+            let category = firstCategory
+            let tileTexts = selectedTiles.map { $0.text }
+            let group = SolvedGroup(category: category, tiles: tileTexts)
+            solvedGroups.append(group)
+            
+            // Mark tiles as solved
             for tile in selectedTiles {
                 if let index = tiles.firstIndex(where: { $0.id == tile.id }) {
                     tiles[index].isSolved = true
                     tiles[index].isSelected = false
                 }
             }
+            
             // Check for overall win
             if tiles.allSatisfy({ $0.isSolved }) {
                 state = .gameOver(won: true)

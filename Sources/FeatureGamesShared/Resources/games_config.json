@@ -1,0 +1,17 @@
+[
+    {
+        "id": "1",
+        "title": "NFL Connection",
+        "iconName": "sportscourt.fill"
+    },
+    {
+        "id": "3",
+        "title": "Ball Knowledge",
+        "iconName": "brain.head.profile"
+    },
+    {
+        "id": "5",
+        "title": "Over / Under",
+        "iconName": "arrow.up.arrow.down.square.fill"
+    }
+]

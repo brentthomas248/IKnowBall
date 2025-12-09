@@ -19,77 +19,20 @@ public struct ConnectionGameView: View {
     
     public var body: some View {
         VStack(spacing: .lg) {
-            // MARK: - Status Header
-            HStack(spacing: .md) {
-                Text("Mistakes remaining:")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                
-                HStack(spacing: .xs) {
-                    ForEach(0..<4) { index in
-                        Circle()
-                            .fill(index < viewModel.mistakesRemaining ? Color.gray : Color.clear)
-                            .frame(width: .sm, height: .sm)
-                            .overlay(Circle().stroke(Color.gray, lineWidth: 1))
-                            // Simple visual logic: Filled if remaining, empty if lost
-                    }
-                }
-            }
-            .padding(.top, .md)
+            statusHeader
             
-            Spacer()
-            
-            // MARK: - Game Grid
-            LazyVGrid(columns: columns, spacing: .sm) {
-                ForEach(viewModel.tiles) { tile in
-                    Button {
-                        viewModel.toggleSelection(tile)
-                    } label: {
-                        Text(tile.text)
-                            .font(.system(size: 14, weight: .bold)) // Slightly smaller for 4 col
-                            .minimumScaleFactor(0.8)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 70) // > 60pt min height
-                            .background(tile.isSelected ? Color.gray : Color(.systemGray5))
-                            .foregroundStyle(tile.isSelected ? .white : .primary)
-                            .clipShape(RoundedRectangle(cornerRadius: .sm))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .stroke(Color.black, lineWidth: tile.isSelected ? 0 : 0)
-                            )
-                    }
-                    .buttonStyle(.plain) // Remove default opacity effect
-                    .animation(.spring(duration: 0.2), value: tile.isSelected)
-                    .accessibilityLabel("\(tile.text)")
-                    .accessibilityAddTraits(tile.isSelected ? .isSelected : [])
-                    .opacity(tile.isSolved ? 0 : 1) // Visually hide solved tiles
-                    .disabled(tile.isSolved)
-                }
+            // Solved Groups Section
+            if !viewModel.solvedGroups.isEmpty {
+                solvedGroupsSection
             }
             
             Spacer()
             
-            // MARK: - Action Footer
-            HStack(spacing: .md) {
-                Button("Shuffle") {
-                    withAnimation {
-                        viewModel.shuffle()
-                    }
-                }
-                .buttonStyle(OutlinedButtonStyle())
-                
-                Button("Deselect All") {
-                    viewModel.deselectAll()
-                }
-                .buttonStyle(OutlinedButtonStyle())
-                
-                Button("Submit") {
-                    viewModel.submit()
-                }
-                .buttonStyle(FilledCapsuleButtonStyle(isDisabled: !viewModel.canSubmit))
-                .disabled(!viewModel.canSubmit)
-            }
-            .padding(.bottom, .lg)
+            gameGrid
+            
+            Spacer()
+            
+            actionFooter
         }
         .padding(.horizontal, .md)
         .navigationTitle("NFL Connection")
@@ -99,7 +42,7 @@ public struct ConnectionGameView: View {
         .navigationDestination(isPresented: $viewModel.showSummary) {
             ScoreSummaryView(
                 score: viewModel.score,
-                correctCount: viewModel.solvedGroups,
+                correctCount: viewModel.solvedGroupsCount,
                 missedCount: viewModel.mistakesMade,
                 onReplay: {
                     viewModel.showSummary = false
@@ -113,6 +56,104 @@ public struct ConnectionGameView: View {
                 }
             )
         }
+    }
+    
+    // MARK: - Subviews
+    
+    private var statusHeader: some View {
+        HStack(spacing: .md) {
+            Text("Mistakes remaining:")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+            
+            HStack(spacing: .xs) {
+                ForEach(0..<4) { index in
+                    Circle()
+                        .fill(index < viewModel.mistakesRemaining ? Color.gray : Color.clear)
+                        .frame(width: .sm, height: .sm)
+                        .overlay(Circle().stroke(Color.gray, lineWidth: 1))
+                        // Simple visual logic: Filled if remaining, empty if lost
+                }
+            }
+        }
+        .padding(.top, .md)
+    }
+    
+    private var gameGrid: some View {
+        LazyVGrid(columns: columns, spacing: .sm) {
+            ForEach(viewModel.activeTiles) { tile in
+                Button {
+                    viewModel.toggleSelection(tile)
+                } label: {
+                    Text(tile.text)
+                        .font(.system(size: 14, weight: .bold))
+                        .minimumScaleFactor(0.8)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 70)
+                        .background(tile.isSelected ? Color.gray : Color.gray.opacity(0.2))
+                        .foregroundStyle(tile.isSelected ? .white : .primary)
+                        .clipShape(RoundedRectangle(cornerRadius: .sm))
+                }
+                .buttonStyle(.plain)
+                .animation(.spring(duration: 0.2), value: tile.isSelected)
+                .accessibilityLabel("\(tile.text)")
+                .accessibilityAddTraits(tile.isSelected ? .isSelected : [])
+            }
+        }
+    }
+    
+    private var solvedGroupsSection: some View {
+        VStack(spacing: .sm) {
+            ForEach(viewModel.solvedGroups) { group in
+                VStack(alignment: .leading, spacing: .xxs) {
+                    Text(group.category.uppercased())
+                        .font(.caption)
+                        .fontWeight(.bold)
+                        .foregroundColor(.secondary)
+                    
+                    HStack(spacing: .xs) {
+                        ForEach(group.tiles, id: \.self) { tileText in
+                            Text(tileText)
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundColor(.white)
+                                .padding(.horizontal, .sm)
+                                .padding(.vertical, .xs)
+                                .frame(maxWidth: .infinity)
+                                .background(Color.blue)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                        }
+                    }
+                }
+                .padding(.sm)
+                .background(Color.blue.opacity(0.1))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .transition(.move(edge: .top).combined(with: .opacity))
+            }
+        }
+        .animation(.spring(), value: viewModel.solvedGroups.count)
+    }
+    
+    private var actionFooter: some View {
+        HStack(spacing: .md) {
+            Button("Shuffle") {
+                withAnimation {
+                    viewModel.shuffle()
+                }
+            }
+            .buttonStyle(OutlinedButtonStyle())
+            
+            Button("Deselect All") {
+                viewModel.deselectAll()
+            }
+            .buttonStyle(OutlinedButtonStyle())
+            
+            Button("Submit") {
+                viewModel.submit()
+            }
+            .buttonStyle(FilledCapsuleButtonStyle(isDisabled: !viewModel.canSubmit))
+            .disabled(!viewModel.canSubmit)
+        }
+        .padding(.bottom, .lg)
     }
 }
 
@@ -144,7 +185,7 @@ struct FilledCapsuleButtonStyle: ButtonStyle {
             .padding(.horizontal, .lg)
             .frame(height: 44)
             .background(isDisabled ? Color.gray.opacity(0.3) : Color.primary)
-            .foregroundStyle(isDisabled ? Color.gray : Color(.systemBackground))
+            .foregroundStyle(isDisabled ? Color.gray : Color.white)
             .clipShape(Capsule())
             .opacity(configuration.isPressed ? 0.9 : 1.0)
             .animation(.easeInOut, value: isDisabled)
