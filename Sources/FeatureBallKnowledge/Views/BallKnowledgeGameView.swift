@@ -4,6 +4,7 @@ import FeatureGamesShared
 import IKnowBallDesignSystem
 
 public struct BallKnowledgeGameView: View {
+    @Environment(\.dismiss) var dismiss
     @State private var viewModel = BallKnowledgeViewModel()
     @FocusState private var isInputFocused: Bool
     
@@ -18,7 +19,7 @@ public struct BallKnowledgeGameView: View {
     ]
     
     public var body: some View {
-        NavigationStack {
+
             ZStack(alignment: .bottom) {
                 
                 // MARK: - Layer 1: Main Content
@@ -117,10 +118,19 @@ public struct BallKnowledgeGameView: View {
                 ScoreSummaryView(
                     score: viewModel.score,
                     correctCount: viewModel.correctCount,
-                    missedCount: viewModel.missedCount
+                    missedCount: viewModel.missedCount,
+                    onReplay: {
+                        viewModel.showSummary = false
+                        viewModel.startNewGame()
+                    },
+                    onHome: {
+                        viewModel.showSummary = false
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            dismiss()
+                        }
+                    }
                 )
             }
-        }
     }
 }
 

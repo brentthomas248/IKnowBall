@@ -42,6 +42,20 @@ class BallKnowledgeViewModel {
     // MARK: - Initialization
     
     init() {
+        startNewGame()
+    }
+    
+    func startNewGame() {
+        // Reset State
+        score = 0
+        timeRemaining = 120
+        currentInput = ""
+        state = .idle
+        showSummary = false
+        correctCount = 0
+        missedCount = 0
+        
+        // Reset Data
         self.tiles = [
             // Tier 1 (Gold)
             GameTileModel(id: UUID(), stat: "5,477 Yds", teamAbbr: "DEN", playerName: "Peyton Manning", isRevealed: false, tier: 1),

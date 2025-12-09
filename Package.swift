@@ -39,11 +39,13 @@ let package = Package(
         ),
         .target(
             name: "FeatureOverUnder",
-            dependencies: ["FeatureGamesShared", "IKnowBallDesignSystem"]
+            dependencies: ["FeatureGamesShared", "IKnowBallDesignSystem", "FeatureScoreSummary"]
+
         ),
         .target(
             name: "FeatureScoreSummary",
-            dependencies: ["FeatureGamesShared", "IKnowBallDesignSystem"]
+            dependencies: ["FeatureGamesShared", "IKnowBallDesignSystem", "FeatureSettings"]
+
         ),
         .target(
             name: "FeatureSettings",
@@ -69,6 +71,12 @@ let package = Package(
         .target(
             name: "IKnowBallApp",
             dependencies: ["IKnowBallFeature"]
+        ),
+        
+        // MARK: - Tests
+        .testTarget(
+            name: "FeatureBallKnowledgeTests",
+            dependencies: ["FeatureBallKnowledge"]
         )
     ]
 )

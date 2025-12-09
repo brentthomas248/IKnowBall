@@ -3,17 +3,27 @@ import SwiftUI
 public struct ScoreSummaryView: View {
     @State private var viewModel: ScoreSummaryViewModel
 
-    public init(score: Int = 0, correctCount: Int = 0, missedCount: Int = 0, xpGained: Int = 450) {
-        _viewModel = State(initialValue: ScoreSummaryViewModel(
+    public init(
+        score: Int = 0,
+        correctCount: Int = 0,
+        missedCount: Int = 0,
+        xpGained: Int = 450,
+        onReplay: @escaping () -> Void = {},
+        onHome: @escaping () -> Void = {}
+    ) {
+        let vm = ScoreSummaryViewModel(
             score: score,
             correctCount: correctCount,
             missedCount: missedCount,
             xpGained: xpGained
-        ))
+        )
+        vm.onReplayLevel = onReplay
+        vm.onGoHome = onHome
+        _viewModel = State(initialValue: vm)
     }
 
     public var body: some View {
-        NavigationStack {
+
             VStack(spacing: 24) { // .lg spacing roughly
                 // Header
                 Text("TIME'S UP!")
@@ -149,7 +159,6 @@ public struct ScoreSummaryView: View {
                 .padding(.horizontal, 24)
                 .padding(.bottom, 16)
             }
-        }
     }
 }
 

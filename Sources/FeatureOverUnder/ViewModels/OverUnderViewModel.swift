@@ -24,6 +24,11 @@ final class OverUnderViewModel {
     var score: Int = 0
     var timeRemaining: Int = 60
     
+    // Stats
+    var correctCount: Int = 0
+    var missedCount: Int = 0
+    var showSummary: Bool = false
+    
     // Internal State
     var lastGuessWasCorrect: Bool?
     private var timer: Timer?
@@ -48,6 +53,9 @@ final class OverUnderViewModel {
     
     func startNewGame() {
         score = 0
+        correctCount = 0
+        missedCount = 0
+        showSummary = false
         timeRemaining = 60
         lastGuessWasCorrect = nil
         loadNextQuestion()
@@ -62,8 +70,10 @@ final class OverUnderViewModel {
         
         if isCorrect {
             score += 1
+            correctCount += 1
             lastGuessWasCorrect = true
         } else {
+            missedCount += 1
             lastGuessWasCorrect = false
         }
         
@@ -109,5 +119,6 @@ final class OverUnderViewModel {
         gameState = .gameOver
         timer?.invalidate()
         timer = nil
+        showSummary = true
     }
 }

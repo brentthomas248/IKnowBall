@@ -1,6 +1,8 @@
 import SwiftUI
+import FeatureScoreSummary
 
 public struct OverUnderGameplayView: View {
+    @Environment(\.dismiss) var dismiss
     @State private var viewModel = OverUnderViewModel()
 
     public init() {}
@@ -111,59 +113,27 @@ public struct OverUnderGameplayView: View {
             .padding(.horizontal)
             .padding(.bottom, 32)
         }
-        .background(Color(uiColor: .systemBackground)) // Clean white as requested (systemBackground adapts)
-        .overlay {
-            if viewModel.gameState == .gameOver {
-                gameOverOverlay
-            }
-        }
-        .onAppear {
-            viewModel.startNewGame()
+        .background(Color(uiColor: .systemBackground))
+        .navigationDestination(isPresented: $viewModel.showSummary) {
+            ScoreSummaryView(
+                score: viewModel.score,
+                correctCount: viewModel.correctCount,
+                missedCount: viewModel.missedCount,
+                onReplay: {
+                    viewModel.showSummary = false
+                    viewModel.startNewGame()
+                },
+                onHome: {
+                    viewModel.showSummary = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        dismiss()
+                    }
+                }
+            )
         }
     }
     
     // MARK: - Helpers
-    
-    private var gameOverOverlay: some View {
-        ZStack {
-            Color.black.opacity(0.8).ignoresSafeArea()
-            
-            VStack(spacing: 24) {
-                Text("GAME OVER")
-                    .font(.largeTitle)
-                    .fontWeight(.heavy)
-                    .foregroundColor(.white)
-                
-                VStack(spacing: 8) {
-                    Text("Final Score")
-                        .font(.headline)
-                        .foregroundColor(.gray)
-                    Text("\(viewModel.score)")
-                        .font(.system(size: 80, weight: .bold, design: .rounded))
-                        .foregroundColor(.yellow)
-                }
-                
-                Button {
-                    viewModel.startNewGame()
-                } label: {
-                    Text("Play Again")
-                        .font(.headline)
-                        .foregroundColor(.black)
-                        .padding(.horizontal, 32)
-                        .padding(.vertical, 16)
-                        .background(Color.white)
-                        .cornerRadius(30)
-                }
-            }
-            .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 24)
-                    .fill(Color(uiColor: .systemGray6))
-                    .frame(width: 300)
-                    .opacity(0.1) // Subtle backing if needed, or just float on black
-            )
-        }
-    }
     
     // Helper to format 5100.5 -> "5,100.5"
     private func formatValue(_ value: Double) -> String {

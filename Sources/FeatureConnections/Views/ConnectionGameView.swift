@@ -4,6 +4,7 @@ import FeatureGamesShared
 import IKnowBallDesignSystem
 
 public struct ConnectionGameView: View {
+    @Environment(\.dismiss) var dismiss
     @State private var viewModel = ConnectionGameViewModel()
 
     public init() {}
@@ -97,7 +98,17 @@ public struct ConnectionGameView: View {
             ScoreSummaryView(
                 score: viewModel.score,
                 correctCount: viewModel.solvedGroups,
-                missedCount: viewModel.mistakesMade
+                missedCount: viewModel.mistakesMade,
+                onReplay: {
+                    viewModel.showSummary = false
+                    viewModel.startNewGame()
+                },
+                onHome: {
+                    viewModel.showSummary = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        dismiss()
+                    }
+                }
             )
         }
     }

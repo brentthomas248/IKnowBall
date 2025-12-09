@@ -35,10 +35,9 @@ public struct HomeView: View {
                 }
             }
         }
-        .task {
-            if case .idle = viewModel.state {
-                viewModel.loadData()
-            }
+        .onAppear {
+            // Always reload data when view appears to catch XP updates
+            viewModel.loadData()
         }
     }
     

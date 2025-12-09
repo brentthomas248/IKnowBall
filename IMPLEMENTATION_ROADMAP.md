@@ -20,29 +20,34 @@ This document tracks high-level milestones. Agents should update this file after
 ## 🟡 Phase 2: Core Gameplay Loop (Next Up)
 *Goal: Implement the primary user interactive experience (The "Game").*
 
-- [/] **Game Data Models**: Defined `GameTileModel` and ViewModels for Ball Knowledge.
-- [ ] **GameCoordinator**: Create a service to manage game state (Active, Paused, Finished).
-- [/] **GameView**: 
+- [/] **Game Data Models**: Defined `GameTileModel` and ViewModels for all games.
+- [x] **GameCoordinator**: Managed via `ScoreSummaryView` and ViewModels.
+- [x] **GameView**: 
     - [x] Design the primary gameplay screen (Timer, Score, Interactions).
     - [x] Implement interactive components (Cards, Buttons).
     - [x] **Feature: Ball Knowledge**: Implemented Grid-based guessing game using MVVM.
-- [ ] **Results Screen**: Summary view with "Play Again" flows.
+    - [x] **Feature: Connections**: Implemented Group-based logic game.
+    - [x] **Feature: Over/Under**: Implemented Stat-based guessing game.
+- [x] **Results Screen**: Shared `FeatureScoreSummary` module with "Play Again" and "Home" flows.
 
 ---
 
-## ⚪️ Phase 3: Data & Polish
+## 🟡 Phase 3: Data & Polish (In Progress)
 *Goal: Move from mock data to real persistence and high-fidelity UI.*
 
+- [/] **User Progression**:
+    - [x] **Persistence**: Implemented `UserProfileService` (UserDefaults) for Level/XP.
+    - [x] **Gamification**: Home Dashboard updates with real stats.
 - [ ] **Data Persistence**: 
-    - [ ] Implement `SwiftData` or `UserDefaults` for user stats and settings.
-    - [ ] Create `DataService` layer.
+    - [ ] Create `GameDataService` (JSON) to replace hardcoded game content.
 - [ ] **UI Polish**:
     - [ ] Add transition animations between states.
     - [ ] Implement Dark Mode specific tweaks.
     - [ ] Add Haptic Feedback engine.
 - [ ] **Unit Testing**: 
-    - [ ] Test `SettingsViewModel` logic.
-    - [ ] Test `GameCoordinator` state machine.
+    - [x] **Infrastructure**: Added Test Target for FeatureBallKnowledge.
+    - [x] **Ball Knowledge**: Implemented tests for ViewModel logic.
+    - [ ] Add tests for other features.
 
 ---
 

@@ -1,4 +1,5 @@
 import SwiftUI
+import FeatureSettings
 
 @Observable
 final class ScoreSummaryViewModel {
@@ -70,17 +71,21 @@ final class ScoreSummaryViewModel {
         correctCount: Int = 12,
         missedCount: Int = 3,
         gameDuration: TimeInterval = 60,
-        currentXp: Int = 450,
-        xpGained: Int = 450,
-        xpRequiredForNextLevel: Int = 1000
+        xpGained: Int = 450
     ) {
         self.score = score
         self.correctCount = correctCount
         self.missedCount = missedCount
         self.gameDuration = gameDuration
-        self.currentXp = currentXp
         self.xpGained = xpGained
-        self.xpRequiredForNextLevel = xpRequiredForNextLevel
+        
+        // Award XP
+        UserProfileService.shared.addXP(xpGained)
+        
+        // Read updated state for display
+        let profile = UserProfileService.shared.userProfile
+        self.currentXp = Int(profile.currentXP)
+        self.xpRequiredForNextLevel = Int(profile.maxXP)
         
         self.state = .content
     }
