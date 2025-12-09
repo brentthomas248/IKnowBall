@@ -1,6 +1,6 @@
 import Foundation
 
-public struct GameTile: Identifiable, Equatable {
+public struct GameTile: Identifiable, Equatable, Codable {
     public let id: UUID
     public let text: String
     public let category: String // New: To identify which group it belongs to

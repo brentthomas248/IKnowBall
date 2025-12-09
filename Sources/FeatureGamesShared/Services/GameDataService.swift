@@ -1,47 +1,49 @@
 import Foundation
 
-public enum GameType {
-    case ballKnowledge
-    // Add other cases as needed
-}
-
-public class GameDataService {
+public final class GameDataService: Sendable {
     public static let shared = GameDataService()
     
     private init() {}
     
-    public func loadBallKnowledgeQuestions() async -> [BallKnowledgeQuestion] {
-        // Simulate network/disk delay
-        try? await Task.sleep(nanoseconds: 100_000_000) // 0.1s
-        return loadJSON(filename: "ball_knowledge_questions")
-    }
-    
-    public func loadConnectionsData() async -> [GameTile] {
-        try? await Task.sleep(nanoseconds: 100_000_000)
-        let data: [ConnectionData] = loadJSON(filename: "connections_data")
-        return data.map {
-            GameTile(text: $0.text, category: $0.category)
-        }
-    }
-    
-    public func loadOverUnderQuestions() async -> [OverUnderQuestion] {
-        try? await Task.sleep(nanoseconds: 100_000_000)
-        return loadJSON(filename: "over_under_data")
-    }
-    
-    private func loadJSON<T: Decodable>(filename: String) -> [T] {
-        guard let url = Bundle.module.url(forResource: filename, withExtension: "json") else {
-            print("Failed to find JSON: \(filename)")
+    /// Generic fetch for JSON data
+    public func fetchData<T: Decodable>(from fileName: String) async -> [T] {
+        guard let url = Bundle.module.url(forResource: fileName, withExtension: "json") else {
+            print("❌ GameDataService: Could not find \(fileName).json in bundle.")
             return []
         }
         
         do {
             let data = try Data(contentsOf: url)
-            let result = try JSONDecoder().decode([T].self, from: data)
-            return result
+            let decoder = JSONDecoder()
+            // Optional: Handle snake_case to camelCase if needed, but defaults are usually fine if JSON matches
+            // decoder.keyDecodingStrategy = .convertFromSnakeCase 
+            let items = try decoder.decode([T].self, from: data)
+            return items
         } catch {
-            print("Failed to decode JSON \(filename): \(error)")
+            print("❌ GameDataService: Failed to decode \(fileName).json. Error: \(error)")
             return []
+        }
+    }
+    
+    public enum GameType {
+        case ballKnowledge
+    }
+
+    /// Loads Connections Game Data
+    public func loadConnectionsData() async -> [GameTile] {
+        return await fetchData(from: "connections_data")
+    }
+    
+    /// Loads Over/Under Game Data
+    public func loadOverUnderQuestions() async -> [OverUnderQuestion] {
+        return await fetchData(from: "over_under_data")
+    }
+    
+    /// Loads specific game data by type
+    public func fetchData(for type: GameType) async -> [BallKnowledgeQuestion] {
+        switch type {
+        case .ballKnowledge:
+            return await fetchData(from: "ball_knowledge_questions")
         }
     }
 }

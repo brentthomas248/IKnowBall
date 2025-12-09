@@ -61,7 +61,7 @@ class BallKnowledgeViewModel {
         // Load Data from Service
         // Reset Data
         Task {
-            let questions = await GameDataService.shared.loadBallKnowledgeQuestions()
+            let questions = await GameDataService.shared.fetchData(for: .ballKnowledge)
             await MainActor.run {
                 self.tiles = questions.map { question in
                     GameTileModel(
