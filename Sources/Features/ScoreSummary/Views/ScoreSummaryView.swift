@@ -1,7 +1,16 @@
 import SwiftUI
 
 struct ScoreSummaryView: View {
-    @State private var viewModel = ScoreSummaryViewModel()
+    @State private var viewModel: ScoreSummaryViewModel
+
+    init(score: Int = 0, correctCount: Int = 0, missedCount: Int = 0, xpGained: Int = 450) {
+        _viewModel = State(initialValue: ScoreSummaryViewModel(
+            score: score,
+            correctCount: correctCount,
+            missedCount: missedCount,
+            xpGained: xpGained
+        ))
+    }
 
     var body: some View {
         NavigationStack {

@@ -108,6 +108,13 @@ struct BallKnowledgeGameView: View {
             .onAppear {
                 isInputFocused = true
             }
+            .navigationDestination(isPresented: $viewModel.showSummary) {
+                ScoreSummaryView(
+                    score: viewModel.score,
+                    correctCount: viewModel.correctCount,
+                    missedCount: viewModel.missedCount
+                )
+            }
         }
     }
 }

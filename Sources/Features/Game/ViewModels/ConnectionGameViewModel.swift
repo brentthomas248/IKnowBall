@@ -9,12 +9,29 @@ final class ConnectionGameViewModel {
     
     // Game State
     var state: State = .playing
+    var showSummary: Bool = false
+    
     var tiles: [GameTile] = []
     var mistakesRemaining: Int = 4
     
     // Computed Properties
     var canSubmit: Bool {
         selectedTiles.count == 4
+    }
+    
+    var solvedGroups: Int {
+        tiles.filter { $0.isSolved }.count / 4
+    }
+    
+    var mistakesMade: Int {
+        4 - mistakesRemaining
+    }
+    
+    var score: Int {
+        // Simple scoring: 250 points per group, minus 50 per mistake
+        let groupPoints = solvedGroups * 250
+        let penalty = mistakesMade * 50
+        return max(0, groupPoints - penalty)
     }
     
     private var selectedTiles: [GameTile] {
@@ -35,6 +52,7 @@ final class ConnectionGameViewModel {
         tiles = (positions + scoring + gear + office).shuffled()
         mistakesRemaining = 4
         state = .playing
+        showSummary = false
     }
     
     func toggleSelection(_ tile: GameTile) {
@@ -79,6 +97,7 @@ final class ConnectionGameViewModel {
             // Check for overall win
             if tiles.allSatisfy({ $0.isSolved }) {
                 state = .gameOver(won: true)
+                showSummary = true
             }
         } else {
             // Failure: Decrement mistakes
@@ -88,6 +107,7 @@ final class ConnectionGameViewModel {
             
             if mistakesRemaining == 0 {
                 state = .gameOver(won: false)
+                showSummary = true
             }
             // Optional: Provide feedback (shake?)
             // For now, simple state change is enough

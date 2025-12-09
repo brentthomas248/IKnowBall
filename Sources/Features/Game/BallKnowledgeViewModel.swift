@@ -26,10 +26,18 @@ class BallKnowledgeViewModel {
     var timeRemaining: Int = 120
     var currentInput: String = ""
     var state: GameState = .idle
+    var showSummary: Bool = false
+    
+    var correctCount: Int = 0
+    var missedCount: Int = 0
     
     var tiles: [GameTileModel] = []
     
     private var timer: Timer?
+    
+    var isGameOver: Bool {
+        state == .finished
+    }
     
     // MARK: - Initialization
     
@@ -93,14 +101,22 @@ class BallKnowledgeViewModel {
                 // Correct Guess
                 tiles[index].isRevealed = true
                 score += points(for: tile.tier)
+                correctCount += 1
                 matchFound = true
             }
+        }
+        
+        // Check win condition
+        let allRevealed = tiles.allSatisfy { $0.isRevealed }
+        if allRevealed {
+            endGame()
         }
         
         if matchFound {
             currentInput = ""
         } else {
             // Incorrect Guess
+            missedCount += 1
             timeRemaining = max(0, timeRemaining - 10)
             // Ideally trigger shake feedback here via a published property
         }
@@ -117,6 +133,7 @@ class BallKnowledgeViewModel {
     
     private func endGame() {
         state = .finished
+        showSummary = true
         timer?.invalidate()
         timer = nil
     }

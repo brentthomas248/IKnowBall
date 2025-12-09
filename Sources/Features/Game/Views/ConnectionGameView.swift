@@ -88,6 +88,13 @@ struct ConnectionGameView: View {
         .padding(.horizontal, .md)
         .navigationTitle("NFL Connection")
         .navigationBarTitleDisplayMode(.inline)
+        .navigationDestination(isPresented: $viewModel.showSummary) {
+            ScoreSummaryView(
+                score: viewModel.score,
+                correctCount: viewModel.solvedGroups,
+                missedCount: viewModel.mistakesMade
+            )
+        }
     }
 }
 

@@ -105,6 +105,8 @@ public struct HomeView: View {
                         // Dynamic destination based on game ID
                         if game.title == "Ball Knowledge" {
                             BallKnowledgeGameView()
+                        } else if game.title == "Over / Under" {
+                            OverUnderGameplayView()
                         } else {
                             ConnectionGameView()
                         }
