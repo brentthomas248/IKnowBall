@@ -4,7 +4,26 @@ This document defines the mandatory folder structure and architectural patterns 
 
 ## 1. Hierarchy Rules
 
-All new features must follow this strict **"Feature-First"** directory structure:
+> [!IMPORTANT]
+> **Split Project Architecture**
+> This project uses a **Package-Based Architecture** to support both SwiftUI Previews and Simulator builds.
+>
+> 1. **Logic Package (`Package.swift`)**:
+>    - All feature code lives here in `Sources/`.
+>    - Defined as a `.library` named `IKnowBallFeature`.
+>    - **NO `@main` entry point** (crucial for Previews).
+>
+> 2. **Wrapper App (`IKnowBall.xcodeproj`)**:
+>    - Standard Xcode Project that links the package locally.
+>    - Contains `IKnowBallApp.swift` with `@main`.
+>    - **DO NOT EDIT CODE HERE** unless updating the entry point.
+>
+> **Workflow**:
+> - Develop features in the **Package**.
+> - Use **Xcode Previews** for rapid iteration.
+> - Run the **Wrapper App** to test on Simulator.
+
+All new features must follow this strict **"Feature-First"** directory structure within the Package:
 
 ```
 /Sources/

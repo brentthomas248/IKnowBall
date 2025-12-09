@@ -1,17 +1,13 @@
 import SwiftUI
 
-struct ContentView: View {
-    var body: some View {
-        VStack {
-            Text("DEBUG: App is Running")
-                .font(.caption)
-                .background(Color.yellow)
-            
-            NavigationStack {
-                HomeView()
-            }
+public struct ContentView: View {
+    public init() {}
+    public var body: some View {
+        NavigationStack {
+            HomeView()
         }
     }
+
 }
 
 #Preview {

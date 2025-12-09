@@ -5,4 +5,5 @@ struct UserProfile: Codable, Equatable {
     let level: Int
     let currentXP: Double
     let maxXP: Double
+    var avatarURL: URL? = nil
 }

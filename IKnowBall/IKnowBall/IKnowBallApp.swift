@@ -12,7 +12,7 @@ import IKnowBallFeature
 struct IKnowBallApp: App {
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            ContentView()
         }
     }
 }

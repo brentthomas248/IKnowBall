@@ -23,7 +23,7 @@ public struct HomeView: View {
         .navigationTitle("Home")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                Button(action: { /* Navigate to Settings */ }) {
+                NavigationLink(destination: SettingsView()) {
                     Image(systemName: "gearshape")
                         .foregroundColor(.primary)
                 }
@@ -101,8 +101,13 @@ public struct HomeView: View {
             
             VStack(spacing: .md) {
                 ForEach(games) { game in
-                    Button {
-                        // Navigate to Game Container
+                    NavigationLink {
+                        // Dynamic destination based on game ID
+                        if game.title == "Ball Knowledge" {
+                            BallKnowledgeGameView()
+                        } else {
+                            ConnectionGameView()
+                        }
                     } label: {
                         GameCard(game: game)
                     }

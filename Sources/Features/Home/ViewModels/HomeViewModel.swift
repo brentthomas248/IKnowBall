@@ -32,7 +32,8 @@ final class HomeViewModel {
             let games = [
                 GameItem(id: "1", title: "NFL Connection", iconName: "sportscourt.fill"),
                 GameItem(id: "2", title: "Daily Blitz", iconName: "bolt.fill"),
-                GameItem(id: "3", title: "Stat Attack", iconName: "chart.bar.fill")
+                GameItem(id: "3", title: "Ball Knowledge", iconName: "brain.head.profile"), // New Game
+                GameItem(id: "4", title: "Stat Attack", iconName: "chart.bar.fill")
             ]
             
             await MainActor.run {
