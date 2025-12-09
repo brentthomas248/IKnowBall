@@ -3,15 +3,7 @@ import SwiftUI
 import FeatureGamesShared
 import IKnowBallCore
 
-/// Represents a single tile in the game grid
-struct GameTileModel: Identifiable {
-    let id: UUID
-    let stat: String
-    let teamAbbr: String
-    let playerName: String
-    var isRevealed: Bool
-    let tier: Int
-}
+// GameTileModel removed, replaced by BallKnowledgeQuestion
 
 enum GameState {
     case idle
@@ -33,7 +25,7 @@ class BallKnowledgeViewModel {
     var correctCount: Int = 0
     var missedCount: Int = 0
     
-    var tiles: [GameTileModel] = []
+    var tiles: [BallKnowledgeQuestion] = []
     
     private var timer: Timer?
     
@@ -63,16 +55,7 @@ class BallKnowledgeViewModel {
         Task {
             let questions = await GameDataService.shared.fetchData(for: .ballKnowledge)
             await MainActor.run {
-                self.tiles = questions.map { question in
-                    GameTileModel(
-                        id: UUID(),
-                        stat: question.stat,
-                        teamAbbr: question.teamAbbr,
-                        playerName: question.playerName,
-                        isRevealed: false,
-                        tier: question.tier
-                    )
-                }
+                self.tiles = questions
                 self.startTimer()
             }
         }

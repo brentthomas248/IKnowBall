@@ -14,4 +14,19 @@ public struct GameTile: Identifiable, Equatable, Codable {
         self.isSelected = isSelected
         self.isSolved = isSolved
     }
+    
+    enum CodingKeys: String, CodingKey {
+        case text, category
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.text = try container.decode(String.self, forKey: .text)
+        self.category = try container.decode(String.self, forKey: .category)
+        
+        // Default state
+        self.id = UUID()
+        self.isSelected = false
+        self.isSolved = false
+    }
 }
