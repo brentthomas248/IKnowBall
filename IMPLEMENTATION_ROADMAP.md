@@ -1,4 +1,4 @@
-# Implementation Roadmap
+# Implementatino Roadmap
 
 **Objective**: Scale **IKnowBall** into a fully-featured interactive iOS application.
 
@@ -17,10 +17,10 @@ This document tracks high-level milestones. Agents should update this file after
 
 ---
 
-## 🟡 Phase 2: Core Gameplay Loop (Next Up)
+## 🟢 Phase 2: Core Gameplay Loop (Current Status: COMPLETE)
 *Goal: Implement the primary user interactive experience (The "Game").*
 
-- [/] **Game Data Models**: Defined `GameTileModel` and ViewModels for all games.
+- [x] **Game Data Models**: Defined `GameTileModel` and ViewModels for all games.
 - [x] **GameCoordinator**: Managed via `ScoreSummaryView` and ViewModels.
 - [x] **GameView**: 
     - [x] Design the primary gameplay screen (Timer, Score, Interactions).
@@ -44,20 +44,11 @@ This document tracks high-level milestones. Agents should update this file after
     - [x] Add transition animations between states.
     - [x] Implement Dark Mode specific tweaks.
     - [x] Add Haptic Feedback engine.
-- [x] **Unit Testing**: 
+- [ ] **Unit Testing**: 
     - [x] **Infrastructure**: Added Test Target for FeatureBallKnowledge.
     - [x] **Ball Knowledge**: Implemented tests for ViewModel logic.
-    - [x] Add tests for other features (Connections, Over/Under).
+    - [ ] Add tests for other features (Connections, Over/Under).
 
 ---
 
-## 🔴 Phase 4: Release Prep
-*Goal: Production readiness.*
-
-- [ ] **App Icon & Assets**: Replace system images with custom assets.
-- [ ] **Onboarding Flow**: First-launch tutorial.
-- [ ] **Performance Profiling**: Analyze memory usage in Instruments.
-
----
-
-*Last Updated: Dec 8, 2025*
+*Last Updated: Dec 9, 2025*

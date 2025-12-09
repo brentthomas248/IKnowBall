@@ -10,18 +10,22 @@ public class GameDataService {
     
     private init() {}
     
-    public func loadBallKnowledgeQuestions() -> [BallKnowledgeQuestion] {
+    public func loadBallKnowledgeQuestions() async -> [BallKnowledgeQuestion] {
+        // Simulate network/disk delay
+        try? await Task.sleep(nanoseconds: 100_000_000) // 0.1s
         return loadJSON(filename: "ball_knowledge_questions")
     }
     
-    public func loadConnectionsData() -> [GameTile] {
+    public func loadConnectionsData() async -> [GameTile] {
+        try? await Task.sleep(nanoseconds: 100_000_000)
         let data: [ConnectionData] = loadJSON(filename: "connections_data")
         return data.map {
             GameTile(text: $0.text, category: $0.category)
         }
     }
     
-    public func loadOverUnderQuestions() -> [OverUnderQuestion] {
+    public func loadOverUnderQuestions() async -> [OverUnderQuestion] {
+        try? await Task.sleep(nanoseconds: 100_000_000)
         return loadJSON(filename: "over_under_data")
     }
     

@@ -45,18 +45,22 @@ final class ConnectionGameViewModel {
     }
     
     func startNewGame() {
-        // Data Groups
-        let loadedTiles = GameDataService.shared.loadConnectionsData()
-        
-        if loadedTiles.isEmpty {
-            // Fallback if load fails (or for robustness)
-            print("Warning: Failed to load Connections data")
+        Task {
+            // Data Groups
+            let loadedTiles = await GameDataService.shared.loadConnectionsData()
+            
+            await MainActor.run {
+                if loadedTiles.isEmpty {
+                    // Fallback if load fails (or for robustness)
+                    print("Warning: Failed to load Connections data")
+                }
+                
+                self.tiles = loadedTiles.shuffled()
+                self.mistakesRemaining = 4
+                self.state = .playing
+                self.showSummary = false
+            }
         }
-        
-        tiles = loadedTiles.shuffled()
-        mistakesRemaining = 4
-        state = .playing
-        showSummary = false
     }
     
     func toggleSelection(_ tile: GameTile) {

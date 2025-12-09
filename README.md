@@ -78,7 +78,7 @@ The project is set up as a hybrid App + Swift Package structure.
 | :--- | :--- | :--- |
 | **Home** | 🟢 Beta | Dashboard with user stats and game list. |
 | **Settings** | 🟢 V1 | User preferences (Sound, Haptics) and Profile/Help links. |
-| **Game** | ⚪️ Planned | Core gameplay loop. |
+| **Game** | 🟢 Beta | Core gameplay loop (Ball Knowledge, Connections, Over/Under). |
 
 ---
 

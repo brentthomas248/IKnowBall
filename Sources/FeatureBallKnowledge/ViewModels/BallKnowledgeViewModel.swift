@@ -59,19 +59,23 @@ class BallKnowledgeViewModel {
         
         // Reset Data
         // Load Data from Service
-        let questions = GameDataService.shared.loadBallKnowledgeQuestions()
-        self.tiles = questions.map { question in
-            GameTileModel(
-                id: UUID(),
-                stat: question.stat,
-                teamAbbr: question.teamAbbr,
-                playerName: question.playerName,
-                isRevealed: false,
-                tier: question.tier
-            )
+        // Reset Data
+        Task {
+            let questions = await GameDataService.shared.loadBallKnowledgeQuestions()
+            await MainActor.run {
+                self.tiles = questions.map { question in
+                    GameTileModel(
+                        id: UUID(),
+                        stat: question.stat,
+                        teamAbbr: question.teamAbbr,
+                        playerName: question.playerName,
+                        isRevealed: false,
+                        tier: question.tier
+                    )
+                }
+                self.startTimer()
+            }
         }
-        
-        startTimer()
     }
     
     // MARK: - Game Logic

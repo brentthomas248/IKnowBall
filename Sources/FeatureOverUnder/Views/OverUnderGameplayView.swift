@@ -1,5 +1,6 @@
 import SwiftUI
 import FeatureScoreSummary
+import IKnowBallDesignSystem
 
 public struct OverUnderGameplayView: View {
     @Environment(\.dismiss) var dismiss
@@ -18,9 +19,9 @@ public struct OverUnderGameplayView: View {
                 
                 Spacer()
                 
-                HStack(spacing: 16) {
+                HStack(spacing: .md) {
                     // Timer
-                    HStack(spacing: 4) {
+                    HStack(spacing: .xxs) {
                         Image(systemName: "clock")
                         Text("\(viewModel.timeRemaining)")
                             .monospacedDigit()
@@ -28,7 +29,7 @@ public struct OverUnderGameplayView: View {
                     .foregroundColor(viewModel.timeRemaining < 10 ? .red : .primary)
                     
                     // Score
-                    HStack(spacing: 4) {
+                    HStack(spacing: .xxs) {
                         Image(systemName: "trophy.fill")
                             .foregroundColor(.yellow)
                         Text("\(viewModel.score)")
@@ -43,7 +44,7 @@ public struct OverUnderGameplayView: View {
             
             // MARK: - Game Content
             if let question = viewModel.currentQuestion {
-                VStack(spacing: 8) {
+                VStack(spacing: .xs) {
                     Text(question.player)
                         .font(.title3)
                         .fontWeight(.bold)
@@ -77,7 +78,7 @@ public struct OverUnderGameplayView: View {
             Spacer()
             
             // MARK: - Controls
-            HStack(spacing: 16) {
+            HStack(spacing: .md) {
                 // UNDER Button
                 Button {
                     viewModel.submitGuess(isOver: false)
@@ -89,7 +90,7 @@ public struct OverUnderGameplayView: View {
                         .frame(maxWidth: .infinity)
                         .frame(height: 80)
                         .background(Color.red)
-                        .cornerRadius(16)
+                        .cornerRadius(.md)
                 }
                 .disabled(viewModel.gameState != .playing)
                 .opacity(viewModel.gameState != .playing ? 0.6 : 1.0)
@@ -105,13 +106,13 @@ public struct OverUnderGameplayView: View {
                         .frame(maxWidth: .infinity)
                         .frame(height: 80)
                         .background(Color.green)
-                        .cornerRadius(16)
+                        .cornerRadius(.md)
                 }
                 .disabled(viewModel.gameState != .playing)
                 .opacity(viewModel.gameState != .playing ? 0.6 : 1.0)
             }
             .padding(.horizontal)
-            .padding(.bottom, 32)
+            .padding(.bottom, .xl)
         }
         .background(Color.white)
         .navigationDestination(isPresented: $viewModel.showSummary) {

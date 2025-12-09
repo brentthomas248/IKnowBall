@@ -29,7 +29,7 @@ public struct ConnectionGameView: View {
                     ForEach(0..<4) { index in
                         Circle()
                             .fill(index < viewModel.mistakesRemaining ? Color.gray : Color.clear)
-                            .frame(width: 12, height: 12)
+                            .frame(width: .sm, height: .sm)
                             .overlay(Circle().stroke(Color.gray, lineWidth: 1))
                             // Simple visual logic: Filled if remaining, empty if lost
                     }
@@ -52,7 +52,7 @@ public struct ConnectionGameView: View {
                             .frame(height: 70) // > 60pt min height
                             .background(tile.isSelected ? Color.gray : Color(.systemGray5))
                             .foregroundStyle(tile.isSelected ? .white : .primary)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .clipShape(RoundedRectangle(cornerRadius: .sm))
                             .overlay(
                                 RoundedRectangle(cornerRadius: 12)
                                     .stroke(Color.black, lineWidth: tile.isSelected ? 0 : 0)
@@ -123,7 +123,7 @@ struct OutlinedButtonStyle: ButtonStyle {
         configuration.label
             .font(.subheadline)
             .fontWeight(.semibold)
-            .padding(.horizontal, 16)
+            .padding(.horizontal, .md)
             .frame(height: 44)
             .background(
                 RoundedRectangle(cornerRadius: 22)
@@ -141,7 +141,7 @@ struct FilledCapsuleButtonStyle: ButtonStyle {
         configuration.label
             .font(.subheadline)
             .fontWeight(.bold)
-            .padding(.horizontal, 24)
+            .padding(.horizontal, .lg)
             .frame(height: 44)
             .background(isDisabled ? Color.gray.opacity(0.3) : Color.primary)
             .foregroundStyle(isDisabled ? Color.gray : Color(.systemBackground))

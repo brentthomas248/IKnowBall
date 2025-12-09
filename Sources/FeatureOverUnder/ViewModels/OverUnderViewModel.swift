@@ -43,8 +43,13 @@ final class OverUnderViewModel {
         showSummary = false
         timeRemaining = 60
         lastGuessWasCorrect = nil
-        loadNextQuestion()
-        startTimer()
+        
+        Task {
+            await loadNextQuestion()
+            await MainActor.run {
+                startTimer()
+            }
+        }
     }
     
     func submitGuess(isOver: Bool) {
@@ -69,29 +74,34 @@ final class OverUnderViewModel {
         Task {
             try? await Task.sleep(nanoseconds: 1_500_000_000) // 1.5 seconds
             
-            await MainActor.run {
-                if timeRemaining > 0 {
-                    loadNextQuestion()
-                } else {
+            if timeRemaining > 0 {
+                await loadNextQuestion()
+            } else {
+                await MainActor.run {
                     endGame()
                 }
             }
         }
     }
     
-    private func loadNextQuestion() {
+    private func loadNextQuestion() async {
         if timeRemaining <= 0 {
-            endGame()
+            await MainActor.run { endGame() }
             return
         }
         
         if questionPool.isEmpty {
-            questionPool = GameDataService.shared.loadOverUnderQuestions()
+            let questions = await GameDataService.shared.loadOverUnderQuestions()
+            await MainActor.run {
+                self.questionPool = questions
+            }
         }
         
-        currentQuestion = questionPool.randomElement()
-        gameState = .playing
-        lastGuessWasCorrect = nil
+        await MainActor.run {
+            currentQuestion = questionPool.randomElement()
+            gameState = .playing
+            lastGuessWasCorrect = nil
+        }
     }
     
     private func startTimer() {
