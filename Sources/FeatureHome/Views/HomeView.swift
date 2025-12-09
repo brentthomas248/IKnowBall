@@ -5,6 +5,7 @@ import FeatureOverUnder
 import FeatureConnections
 import FeatureGamesShared
 import IKnowBallDesignSystem
+import IKnowBallCore
 
 public struct HomeView: View {
     @State private var viewModel = HomeViewModel()
@@ -26,162 +27,226 @@ public struct HomeView: View {
             .padding(.horizontal, .md)
             .padding(.top, .lg)
         }
+        .background(Color.appBackground)
         .navigationTitle("Home")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 NavigationLink(destination: SettingsView()) {
-                    Image(systemName: "gearshape")
-                        .foregroundColor(.primary)
+                    IconView("gearshape", size: .medium, color: .appTextPrimary)
                 }
             }
         }
         .onAppear {
-            // Always reload data when view appears to catch XP updates
             viewModel.loadData()
         }
     }
     
-    // MARK: - Subviews
+    // MARK: - Loading State
     
     private var loadingState: some View {
         VStack(spacing: .xl) {
-            // Header Skeleton
-            HStack(spacing: .md) {
-                Circle()
-                    .fill(Color.secondary.opacity(0.1))
-                    .frame(width: 50, height: 50)
-                
-                VStack(alignment: .leading, spacing: .xs) {
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(Color.secondary.opacity(0.1))
-                        .frame(width: 120, height: 20)
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(Color.secondary.opacity(0.1))
-                        .frame(width: 80, height: 16)
+            // User Stats Skeleton
+            CardView.elevated {
+                HStack(spacing: .md) {
+                    Circle()
+                        .fill(Color.appSurface.opacity(0.3))
+                        .squareFrame(.avatarLarge)
+                    
+                    VStack(alignment: .leading, spacing: .xs) {
+                        RoundedRectangle(cornerRadius: 4, style: .continuous)
+                            .fill(Color.appSurface.opacity(0.3))
+                            .frame(width: 120, height: .skeletonLarge)
+                        RoundedRectangle(cornerRadius: 4, style: .continuous)
+                            .fill(Color.appSurface.opacity(0.3))
+                            .frame(width: 80, height: .skeletonSmall)
+                    }
+                    Spacer()
                 }
-                Spacer()
             }
+            .redacted(reason: .placeholder)
             
             // Game Cards Skeleton
             ForEach(0..<3) { _ in
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color.secondary.opacity(0.1))
-                    .frame(height: 60)
+                CardView.elevated {
+                    HStack(spacing: .md) {
+                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                            .fill(Color.appSurface.opacity(0.3))
+                            .squareFrame(.avatarMedium)
+                        
+                        VStack(alignment: .leading, spacing: .xxs) {
+                            RoundedRectangle(cornerRadius: 4, style: .continuous)
+                                .fill(Color.appSurface.opacity(0.3))
+                                .frame(width: 150, height: .skeletonMedium)
+                            RoundedRectangle(cornerRadius: 4, style: .continuous)
+                                .fill(Color.appSurface.opacity(0.3))
+                                .frame(width: 80, height: .skeletonSmall)
+                        }
+                        Spacer()
+                    }
+                }
+                .redacted(reason: .placeholder)
             }
         }
     }
+    
+    // MARK: - Loaded State
     
     private func loadedState(user: UserProfile, games: [GameItem]) -> some View {
         VStack(spacing: .xl) {
-            HStack(spacing: .md) {
-                Image(systemName: "person.circle.fill")
-                    .font(.system(size: 50))
-                    .foregroundColor(.secondary)
-                
-                VStack(alignment: .leading, spacing: .xxs) {
-                    Text(user.username)
-                        .font(.title2)
-                        .fontWeight(.bold)
-                    
-                    Text("Level \(user.level)")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
-                
-                Spacer()
-                
-                VStack(alignment: .trailing, spacing: .xxs) {
-                    Text("XP")
-                        .font(.caption)
-                        .fontWeight(.bold)
-                        .foregroundColor(.secondary)
-                    
-                    ProgressView(value: user.currentXP, total: user.maxXP)
-                        .progressViewStyle(.linear)
-                        .frame(width: 80)
-                }
-            }
-            .accessibilityElement(children: .combine)
-            .accessibilityLabel("Profile: \(user.username), Level \(user.level)")
+            // Premium User Stats Card
+            userStatsCard(user: user)
             
+            // Game List
             VStack(spacing: .md) {
                 ForEach(games) { game in
-                    NavigationLink {
-                        // Dynamic destination based on game ID
-                        if game.title == "Ball Knowledge" {
-                            BallKnowledgeGameView()
-                        } else if game.title == "Over / Under" {
-                            OverUnderGameplayView()
-                        } else {
-                            ConnectionGameView()
-                        }
-                    } label: {
-                        GameCard(game: game)
-                    }
-                    .buttonStyle(.plain)
+                    gameCard(for: game)
                 }
             }
         }
     }
     
-    private func errorState(message: String) -> some View {
-        VStack(spacing: .md) {
-            Image(systemName: "exclamationmark.triangle.fill")
-                .font(.largeTitle)
-                .foregroundColor(.orange)
-            
-            Text("Something went wrong")
-                .font(.headline)
-            
-            Text(message)
-                .font(.body)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-            
-            Button("Retry") {
-                viewModel.loadData()
-            }
-            .padding(.top, .md)
-        }
-        .padding(.top, .xxl)
-    }
-}
-
-private struct GameCard: View {
-    let game: GameItem
+    // MARK: - User Stats Card
     
-    var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 12)
-                .fill(.tertiary)
-            
-            HStack(spacing: .md) {
-                Image(systemName: game.iconName)
-                    .font(.title2)
-                    .foregroundColor(.blue)
-                    .frame(width: 32)
+    private func userStatsCard(user: UserProfile) -> some View {
+        CardView.elevated {
+            VStack(spacing: .md) {
+                HStack(spacing: .md) {
+                    // Avatar
+                    IconView.circled("person.fill", size: .large, color: .appPrimary)
+                    
+                    // User Info
+                    VStack(alignment: .leading, spacing: .xxs) {
+                        Text(user.username)
+                            .font(.appTitle2)
+                            .foregroundStyle(Color.appTextPrimary)
+                        
+                        Text("Level \(user.level)")
+                            .font(.appCallout)
+                            .foregroundStyle(Color.appTextSecondary)
+                    }
+                    
+                    Spacer()
+                    
+                    // XP Display
+                    VStack(alignment: .trailing, spacing: .xxs) {
+                        Text("\(Int(user.currentXP))")
+                            .font(.appNumberMedium)
+                            .foregroundStyle(Color.appPrimary)
+                        
+                        Text("XP")
+                            .font(.appCaption)
+                            .foregroundStyle(Color.appTextSecondary)
+                    }
+                }
                 
-                Text(game.title)
-                    .font(.headline)
-                    .foregroundColor(.primary)
-                
-                Spacer()
-                
-                Image(systemName: "chevron.right")
-                    .font(.body)
-                    .foregroundStyle(.tertiary)
+                // Progress Bar with Gradient
+                VStack(alignment: .leading, spacing: .xxs) {
+                    HStack {
+                        Text("Progress to Level \(user.level + 1)")
+                            .font(.appCaption)
+                            .foregroundStyle(Color.appTextSecondary)
+                        Spacer()
+                        Text("\(Int(user.currentXP))/\(Int(user.maxXP))")
+                            .font(.appCaptionEmphasized)
+                            .foregroundStyle(Color.appTextPrimary)
+                    }
+                    
+                    GeometryReader { geometry in
+                        ZStack(alignment: .leading) {
+                            // Background
+                            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                .fill(Color.appSurface.opacity(0.5))
+                            
+                            // Progress Fill with Gradient
+                            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                .fill(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [Color.appPrimary, Color.appAccent]),
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
+                                .frame(width: geometry.size.width * CGFloat(user.currentXP / user.maxXP))
+                        }
+                    }
+                    .frame(height: .progressBarMedium)
+                }
             }
-            .padding(.horizontal, .md)
         }
-        .frame(height: 60)
-        .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
+        .accessibilityLabel("Profile: \(user.username), Level \(user.level), \(Int(user.currentXP)) XP out of \(Int(user.maxXP))")
+    }
+    
+    // MARK: - Game Card
+    
+    private func gameCard(for game: GameItem) -> some View {
+        NavigationLink {
+            destinationView(for: game)
+        } label: {
+            CardView.elevated {
+                HStack(spacing: .md) {
+                    // Game Icon
+                    IconView(game.iconName, size: .extraLarge, color: .appPrimary)
+                    
+                    // Game Info
+                    VStack(alignment: .leading, spacing: .xxs) {
+                        Text(game.title)
+                            .font(.appHeadline)
+                            .foregroundStyle(Color.appTextPrimary)
+                        
+                        Text("Tap to play")
+                            .font(.appCaption)
+                            .foregroundStyle(Color.appTextSecondary)
+                    }
+                    
+                    Spacer()
+                    
+                    // Chevron
+                    IconView("chevron.right", size: .medium, color: .appTextTertiary)
+                }
+            }
+        }
+        .buttonStyle(.plain)
+        .simultaneousGesture(
+            TapGesture().onEnded {
+                #if os(iOS)
+                HapticManager.shared.impact(style: .light)
+                #endif
+            }
+        )
         .accessibilityLabel("Play \(game.title)")
         .accessibilityHint("Double tap to start game")
     }
+    
+    // MARK: - Error State
+    
+    private func errorState(message: String) -> some View {
+        ErrorView.fullScreen(
+            UserFacingError(
+                title: "Cannot Load Games",
+                message: message,
+                icon: "exclamationmark.triangle.fill",
+                canRetry: true,
+                retryAction: {
+                    viewModel.loadData()
+                }
+            )
+        )
+    }
+    
+    // MARK: - Helper Methods
+    
+    @ViewBuilder
+    private func destinationView(for game: GameItem) -> some View {
+        if game.title == "Ball Knowledge" {
+            BallKnowledgeGameView()
+        } else if game.title == "Over / Under" {
+            OverUnderGameplayView()
+        } else {
+            ConnectionGameView()
+        }
+    }
 }
-
-
 
 // #Preview {
 //     NavigationStack {

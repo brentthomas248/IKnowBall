@@ -44,6 +44,9 @@ final class OverUnderViewModel {
         timeRemaining = 60
         lastGuessWasCorrect = nil
         
+        // Track game start
+        AnalyticsService.shared.track(.gameStarted(gameType: "over_under"))
+        
         Task {
             await loadNextQuestion()
             await MainActor.run {
@@ -62,11 +65,15 @@ final class OverUnderViewModel {
             score += 1
             correctCount += 1
             lastGuessWasCorrect = true
+            #if os(iOS)
             HapticManager.shared.notification(type: .success)
+            #endif
         } else {
             missedCount += 1
             lastGuessWasCorrect = false
+            #if os(iOS)
             HapticManager.shared.notification(type: .error)
+            #endif
         }
         
         gameState = .showingResult
@@ -91,9 +98,18 @@ final class OverUnderViewModel {
         }
         
         if questionPool.isEmpty {
-            let questions = await GameDataService.shared.loadOverUnderQuestions()
-            await MainActor.run {
-                self.questionPool = questions
+            do {
+                let questions = try await GameDataService.shared.loadOverUnderQuestions()
+                await MainActor.run {
+                    self.questionPool = questions
+                }
+            } catch {
+                // Handle error - fall back to empty pool
+                await MainActor.run {
+                    self.questionPool = []
+                    print("Error loading Over/Under questions: \(error.localizedDescription)")
+                }
+                return
             }
         }
         
@@ -122,5 +138,13 @@ final class OverUnderViewModel {
         timer?.invalidate()
         timer = nil
         showSummary = true
+        
+        // Track game completion
+        let timeElapsed = 60 - timeRemaining
+        AnalyticsService.shared.track(.gameCompleted(
+            gameType: "over_under",
+            score: score,
+            timeElapsed: timeElapsed
+        ))
     }
 }

@@ -1,4 +1,6 @@
 import SwiftUI
+import IKnowBallDesignSystem
+import IKnowBallCore
 
 public struct SettingsView: View {
     @State private var viewModel = SettingsViewModel()
@@ -14,12 +16,16 @@ public struct SettingsView: View {
                         AsyncImage(url: viewModel.user.avatarURL) { image in
                             image.resizable()
                         } placeholder: {
-                            Image(systemName: "person.circle.fill")
-                                .resizable()
-                                .foregroundStyle(.gray)
+                            Circle()
+                                .fill(Color.appAccent.opacity(0.2))
+                                .overlay(
+                                    Text(viewModel.user.username.prefix(1).uppercased())
+                                        .font(.appTitle2)
+                                        .foregroundStyle(Color.appAccent)
+                                )
                         }
                         .aspectRatio(contentMode: .fill)
-                        .frame(width: 40, height: 40)
+                        .squareFrame(.avatarMedium)
                         .clipShape(Circle())
                         
                         Text(viewModel.user.username)
@@ -35,8 +41,14 @@ public struct SettingsView: View {
                 Toggle("Sound Effects", isOn: $viewModel.isSoundEnabled)
                 Toggle("Haptic Feedback", isOn: $viewModel.isHapticsEnabled)
                 Toggle("Daily Reminders", isOn: $viewModel.isDailyReminderEnabled)
+                Toggle("Share Analytics", isOn: Binding(
+                    get: { AnalyticsService.shared.isEnabled },
+                    set: { AnalyticsService.shared.setEnabled($0) }
+                ))
             } header: {
                 Text("Preferences")
+            } footer: {
+                Text("Help us improve IKnowBall by sharing anonymous usage data. No personal information is collected.")
             }
             
             // Section 3: Support

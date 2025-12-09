@@ -70,7 +70,7 @@ public struct ConnectionGameView: View {
                 ForEach(0..<4) { index in
                     Circle()
                         .fill(index < viewModel.mistakesRemaining ? Color.gray : Color.clear)
-                        .frame(width: .sm, height: .sm)
+                        .squareFrame(.mistakeIndicator)
                         .overlay(Circle().stroke(Color.gray, lineWidth: 1))
                         // Simple visual logic: Filled if remaining, empty if lost
                 }
@@ -135,60 +135,21 @@ public struct ConnectionGameView: View {
     
     private var actionFooter: some View {
         HStack(spacing: .md) {
-            Button("Shuffle") {
+            SecondaryButton("Shuffle") {
                 withAnimation {
                     viewModel.shuffle()
                 }
             }
-            .buttonStyle(OutlinedButtonStyle())
             
-            Button("Deselect All") {
+            SecondaryButton("Deselect All") {
                 viewModel.deselectAll()
             }
-            .buttonStyle(OutlinedButtonStyle())
             
-            Button("Submit") {
+            PrimaryCapsuleButton("Submit", isDisabled: !viewModel.canSubmit) {
                 viewModel.submit()
             }
-            .buttonStyle(FilledCapsuleButtonStyle(isDisabled: !viewModel.canSubmit))
-            .disabled(!viewModel.canSubmit)
         }
         .padding(.bottom, .lg)
-    }
-}
-
-// MARK: - Custom Button Styles
-
-struct OutlinedButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.subheadline)
-            .fontWeight(.semibold)
-            .padding(.horizontal, .md)
-            .frame(height: 44)
-            .background(
-                RoundedRectangle(cornerRadius: 22)
-                    .stroke(Color.primary, lineWidth: 1)
-            )
-            .foregroundStyle(.primary)
-            .opacity(configuration.isPressed ? 0.7 : 1.0)
-    }
-}
-
-struct FilledCapsuleButtonStyle: ButtonStyle {
-    let isDisabled: Bool
-    
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.subheadline)
-            .fontWeight(.bold)
-            .padding(.horizontal, .lg)
-            .frame(height: 44)
-            .background(isDisabled ? Color.gray.opacity(0.3) : Color.primary)
-            .foregroundStyle(isDisabled ? Color.gray : Color.white)
-            .clipShape(Capsule())
-            .opacity(configuration.isPressed ? 0.9 : 1.0)
-            .animation(.easeInOut, value: isDisabled)
     }
 }
 

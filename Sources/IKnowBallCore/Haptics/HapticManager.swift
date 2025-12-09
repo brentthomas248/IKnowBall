@@ -3,52 +3,33 @@ import UIKit
 #endif
 
 /// Centralized manager for Haptic Feedback
-public final class HapticManager {
+public final class HapticManager: HapticManagerProtocol {
     public static let shared = HapticManager()
     
     private init() {}
     
-    /// Trigger a notification feedback (success, warning, error)
-    public func notification(type: NotificationType) {
-        #if canImport(UIKit)
-        let generator = UINotificationFeedbackGenerator()
-        switch type {
-        case .success: generator.notificationOccurred(.success)
-        case .warning: generator.notificationOccurred(.warning)
-        case .error: generator.notificationOccurred(.error)
-        }
-        #endif
-    }
-    
-    /// Trigger an impact feedback
-    public func impact(style: ImpactStyle) {
-        #if canImport(UIKit)
-        let generator: UIImpactFeedbackGenerator
-        switch style {
-        case .light: generator = UIImpactFeedbackGenerator(style: .light)
-        case .medium: generator = UIImpactFeedbackGenerator(style: .medium)
-        case .heavy: generator = UIImpactFeedbackGenerator(style: .heavy)
-        case .rigid: generator = UIImpactFeedbackGenerator(style: .rigid)
-        case .soft: generator = UIImpactFeedbackGenerator(style: .soft)
-        }
+    #if os(iOS)
+    /// Trigger an impact haptic feedback
+    public func impact(style: UIImpactFeedbackGenerator.FeedbackStyle) {
+        let generator = UIImpactFeedbackGenerator(style: style)
         generator.impactOccurred()
-        #endif
     }
     
-    /// Trigger a selection change feedback
+    /// Trigger a notification haptic feedback
+    public func notification(type: UINotificationFeedbackGenerator.FeedbackType) {
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(type)
+    }
+    
+    /// Trigger a selection haptic feedback
     public func selection() {
-        #if canImport(UIKit)
         let generator = UISelectionFeedbackGenerator()
         generator.selectionChanged()
-        #endif
     }
-    
-    // Abstracted types to avoid UIKit dependency in signature
-    public enum NotificationType {
-        case success, warning, error
-    }
-    
-    public enum ImpactStyle {
-        case light, medium, heavy, rigid, soft
-    }
+    #else
+    // macOS stubs - no-op implementations
+    public func impact(style: Any) {}
+    public func notification(type: Any) {}
+    public func selection() {}
+    #endif
 }

@@ -49,14 +49,23 @@ class BallKnowledgeViewModel {
         correctCount = 0
         missedCount = 0
         
-        // Reset Data
-        // Load Data from Service
-        // Reset Data
+        // Track game start
+        AnalyticsService.shared.track(.gameStarted(gameType: "ball_knowledge"))
+        
+        // Load Data from Service with error handling
         Task {
-            let questions = await GameDataService.shared.fetchData(for: .ballKnowledge)
-            await MainActor.run {
-                self.tiles = questions
-                self.startTimer()
+            do {
+                let questions = try await GameDataService.shared.fetchData(for: .ballKnowledge)
+                await MainActor.run {
+                    self.tiles = questions
+                    self.startTimer()
+                }
+            } catch {
+                // Handle error - fall back to empty state or show error message
+                await MainActor.run {
+                    self.tiles = []
+                    print("Error loading game data: \(error.localizedDescription)")
+                }
             }
         }
     }
@@ -101,13 +110,17 @@ class BallKnowledgeViewModel {
         }
         
         if matchFound {
+            #if os(iOS)
             HapticManager.shared.notification(type: .success)
+            #endif
             currentInput = ""
         } else {
             // Incorrect Guess
             missedCount += 1
             timeRemaining = max(0, timeRemaining - 10)
+            #if os(iOS)
             HapticManager.shared.notification(type: .error)
+            #endif
         }
     }
     
@@ -125,5 +138,13 @@ class BallKnowledgeViewModel {
         showSummary = true
         timer?.invalidate()
         timer = nil
+        
+        // Track game completion
+        let timeElapsed = 120 - timeRemaining
+        AnalyticsService.shared.track(.gameCompleted(
+            gameType: "ball_knowledge",
+            score: score,
+            timeElapsed: timeElapsed
+        ))
     }
 }

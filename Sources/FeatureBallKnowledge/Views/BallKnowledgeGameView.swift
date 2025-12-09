@@ -97,7 +97,7 @@ public struct BallKnowledgeGameView: View {
                     } label: {
                         Image(systemName: "arrow.up.circle.fill")
                             .resizable()
-                            .frame(width: 44, height: 44)
+                            .squareFrame(.minimumTouchTarget)
                             .foregroundColor(.blue)
                     }
                     .accessibilityLabel("Submit Guess")

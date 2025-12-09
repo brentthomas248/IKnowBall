@@ -37,7 +37,7 @@ public struct ScoreSummaryView: View {
                 ZStack {
                     Circle()
                         .stroke(Color.green.opacity(0.3), lineWidth: 10)
-                        .frame(width: 160, height: 160)
+                        .squareFrame(.scoreSummaryIcon)
                     
                     Circle()
                         .trim(from: 0, to: viewModel.accuracy)

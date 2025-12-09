@@ -52,21 +52,27 @@ final class ConnectionGameViewModel {
     }
     
     func startNewGame() {
+        // Track game start
+        AnalyticsService.shared.track(.gameStarted(gameType: "connections"))
+        
         Task {
-            // Data Groups
-            let loadedTiles = await GameDataService.shared.loadConnectionsData()
-            
-            await MainActor.run {
-                if loadedTiles.isEmpty {
-                    // Fallback if load fails (or for robustness)
-                    print("Warning: Failed to load Connections data")
-                }
+            do {
+                // Load data with error handling
+                let loadedTiles = try await GameDataService.shared.loadConnectionsData()
                 
-                self.tiles = loadedTiles.shuffled()
-                self.solvedGroups = []  // Reset solved groups
-                self.mistakesRemaining = 4
-                self.state = .playing
-                self.showSummary = false
+                await MainActor.run {
+                    self.tiles = loadedTiles.shuffled()
+                    self.solvedGroups = []  // Reset solved groups
+                    self.mistakesRemaining = 4
+                    self.state = .playing
+                    self.showSummary = false
+                }
+            } catch {
+                // Handle error - fall back to empty state
+                await MainActor.run {
+                    self.tiles = []
+                    print("Error loading Connections data: \(error.localizedDescription)")
+                }
             }
         }
     }
@@ -104,7 +110,9 @@ final class ConnectionGameViewModel {
         
         if isMatch {
             // Success: Mark as solved
+            #if os(iOS)
             HapticManager.shared.notification(type: .success)
+            #endif
             
             // Create a SolvedGroup
             let category = firstCategory
@@ -124,6 +132,13 @@ final class ConnectionGameViewModel {
             if tiles.allSatisfy({ $0.isSolved }) {
                 state = .gameOver(won: true)
                 showSummary = true
+                
+                // Track game completion
+                AnalyticsService.shared.track(.gameCompleted(
+                    gameType: "connections",
+                    score: score,
+                    timeElapsed: 0 // Connections doesn't have a timer
+                ))
             }
         } else {
             // Failure: Decrement mistakes
@@ -131,11 +146,20 @@ final class ConnectionGameViewModel {
                 mistakesRemaining -= 1
             }
             
+            #if os(iOS)
             HapticManager.shared.notification(type: .error)
+            #endif
             
             if mistakesRemaining == 0 {
                 state = .gameOver(won: false)
                 showSummary = true
+                
+                // Track game completion
+                AnalyticsService.shared.track(.gameCompleted(
+                    gameType: "connections",
+                    score: score,
+                    timeElapsed: 0
+                ))
             }
             // Optional: Provide feedback (shake?)
             // For now, simple state change is enough
