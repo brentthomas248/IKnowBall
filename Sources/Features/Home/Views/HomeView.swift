@@ -1,9 +1,11 @@
 import SwiftUI
 
-struct HomeView: View {
+public struct HomeView: View {
     @State private var viewModel = HomeViewModel()
 
-    var body: some View {
+    public init() {}
+
+    public var body: some View {
         ScrollView {
             VStack(spacing: .lg) {
                 switch viewModel.state {

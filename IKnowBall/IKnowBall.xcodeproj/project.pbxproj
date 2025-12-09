@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		DA046B5A2EE7D80300AC779E /* IKnowBallFeature in Frameworks */ = {isa = PBXBuildFile; productRef = DA046B592EE7D80300AC779E /* IKnowBallFeature */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		DAA161952EE7D3F60018DA1A /* IKnowBall.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IKnowBall.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,16 +27,25 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA046B5A2EE7D80300AC779E /* IKnowBallFeature in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DA046B582EE7D80300AC779E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		DAA1618C2EE7D3F60018DA1A = {
 			isa = PBXGroup;
 			children = (
 				DAA161972EE7D3F60018DA1A /* IKnowBall */,
+				DA046B582EE7D80300AC779E /* Frameworks */,
 				DAA161962EE7D3F60018DA1A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -65,6 +78,7 @@
 			);
 			name = IKnowBall;
 			packageProductDependencies = (
+				DA046B592EE7D80300AC779E /* IKnowBallFeature */,
 			);
 			productName = IKnowBall;
 			productReference = DAA161952EE7D3F60018DA1A /* IKnowBall.app */;
@@ -94,6 +108,9 @@
 			);
 			mainGroup = DAA1618C2EE7D3F60018DA1A;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				DAA161A32EE7D5550018DA1A /* XCLocalSwiftPackageReference "../../IKnowBall" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DAA161962EE7D3F60018DA1A /* Products */;
 			projectDirPath = "";
@@ -328,6 +345,21 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		DAA161A32EE7D5550018DA1A /* XCLocalSwiftPackageReference "../../IKnowBall" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../IKnowBall;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DA046B592EE7D80300AC779E /* IKnowBallFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DAA161A32EE7D5550018DA1A /* XCLocalSwiftPackageReference "../../IKnowBall" */;
+			productName = IKnowBallFeature;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = DAA1618D2EE7D3F60018DA1A /* Project object */;
 }

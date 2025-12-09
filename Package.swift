@@ -8,11 +8,11 @@ let package = Package(
         .macOS(.v14)
     ],
     products: [
-        .executable(name: "IKnowBall", targets: ["IKnowBall"])
+        .library(name: "IKnowBallFeature", targets: ["IKnowBallFeature"])
     ],
     targets: [
-        .executableTarget(
-            name: "IKnowBall",
+        .target(
+            name: "IKnowBallFeature",
             path: "Sources"
         )
     ]
