@@ -1,0 +1,72 @@
+[
+    {
+        "player": "Patrick Mahomes",
+        "team": "KC",
+        "statContext": "Passing Yards (2022)",
+        "lineValue": 5100.5,
+        "actualValue": 5250
+    },
+    {
+        "player": "Tyreek Hill",
+        "team": "MIA",
+        "statContext": "Receiving Yards (2023)",
+        "lineValue": 1750.5,
+        "actualValue": 1799
+    },
+    {
+        "player": "Christian McCaffrey",
+        "team": "SF",
+        "statContext": "Total Scrimmage Yards (2023)",
+        "lineValue": 2100.5,
+        "actualValue": 2023
+    },
+    {
+        "player": "Lamar Jackson",
+        "team": "BAL",
+        "statContext": "Rushing Yards (2019)",
+        "lineValue": 1100.5,
+        "actualValue": 1206
+    },
+    {
+        "player": "Justin Jefferson",
+        "team": "MIN",
+        "statContext": "Receptions (2022)",
+        "lineValue": 125.5,
+        "actualValue": 128
+    },
+    {
+        "player": "Cooper Kupp",
+        "team": "LAR",
+        "statContext": "Receiving Yards (2021)",
+        "lineValue": 1900.5,
+        "actualValue": 1947
+    },
+    {
+        "player": "Travis Kelce",
+        "team": "KC",
+        "statContext": "Receiving Yards (2020)",
+        "lineValue": 1400.5,
+        "actualValue": 1416
+    },
+    {
+        "player": "Derrick Henry",
+        "team": "TEN",
+        "statContext": "Rushing Yards (2020)",
+        "lineValue": 2000.5,
+        "actualValue": 2027
+    },
+    {
+        "player": "Josh Allen",
+        "team": "BUF",
+        "statContext": "Total Touchdowns (2023)",
+        "lineValue": 42.5,
+        "actualValue": 44
+    },
+    {
+        "player": "T.J. Watt",
+        "team": "PIT",
+        "statContext": "Sacks (2021)",
+        "lineValue": 21.5,
+        "actualValue": 22.5
+    }
+]

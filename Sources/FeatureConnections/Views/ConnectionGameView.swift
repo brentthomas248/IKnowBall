@@ -93,7 +93,9 @@ public struct ConnectionGameView: View {
         }
         .padding(.horizontal, .md)
         .navigationTitle("NFL Connection")
+        #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
+        #endif
         .navigationDestination(isPresented: $viewModel.showSummary) {
             ScoreSummaryView(
                 score: viewModel.score,
@@ -149,8 +151,8 @@ struct FilledCapsuleButtonStyle: ButtonStyle {
     }
 }
 
-#Preview {
-    NavigationStack {
-        ConnectionGameView()
-    }
-}
+// #Preview {
+//     NavigationStack {
+//         ConnectionGameView()
+//     }
+// }

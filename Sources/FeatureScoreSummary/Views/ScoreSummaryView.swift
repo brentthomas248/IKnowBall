@@ -116,7 +116,7 @@ public struct ScoreSummaryView: View {
                             Image(systemName: "chevron.right")
                         }
                         .padding()
-                        .background(Color(uiColor: .systemGray6))
+                        .background(Color.secondary.opacity(0.1))
                         .foregroundColor(.primary)
                         .cornerRadius(12)
                     }
@@ -138,7 +138,7 @@ public struct ScoreSummaryView: View {
                             .foregroundColor(.primary)
                             .frame(maxWidth: .infinity)
                             .frame(height: 50)
-                            .background(Color(uiColor: .systemGray5))
+                            .background(Color.secondary.opacity(0.15))
                             .clipShape(Capsule())
                     }
                     .accessibilityLabel("Replay Level")
@@ -162,6 +162,6 @@ public struct ScoreSummaryView: View {
     }
 }
 
-#Preview {
-    ScoreSummaryView()
-}
+// #Preview {
+//     ScoreSummaryView()
+// }

@@ -38,16 +38,16 @@ This document tracks high-level milestones. Agents should update this file after
 - [/] **User Progression**:
     - [x] **Persistence**: Implemented `UserProfileService` (UserDefaults) for Level/XP.
     - [x] **Gamification**: Home Dashboard updates with real stats.
-- [ ] **Data Persistence**: 
-    - [ ] Create `GameDataService` (JSON) to replace hardcoded game content.
-- [ ] **UI Polish**:
-    - [ ] Add transition animations between states.
-    - [ ] Implement Dark Mode specific tweaks.
-    - [ ] Add Haptic Feedback engine.
-- [ ] **Unit Testing**: 
+- [x] **Data Persistence**: 
+    - [x] Create `GameDataService` (JSON) to replace hardcoded game content.
+- [x] **UI Polish**:
+    - [x] Add transition animations between states.
+    - [x] Implement Dark Mode specific tweaks.
+    - [x] Add Haptic Feedback engine.
+- [x] **Unit Testing**: 
     - [x] **Infrastructure**: Added Test Target for FeatureBallKnowledge.
     - [x] **Ball Knowledge**: Implemented tests for ViewModel logic.
-    - [ ] Add tests for other features.
+    - [x] Add tests for other features (Connections, Over/Under).
 
 ---
 

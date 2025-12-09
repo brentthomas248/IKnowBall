@@ -1,0 +1,22 @@
+[
+  { "stat": "5,477 Yds", "teamAbbr": "DEN", "playerName": "Peyton Manning", "tier": 1 },
+  { "stat": "5,476 Yds", "teamAbbr": "NO", "playerName": "Drew Brees", "tier": 1 },
+  { "stat": "5,235 Yds", "teamAbbr": "NE", "playerName": "Tom Brady", "tier": 1 },
+  { "stat": "5,129 Yds", "teamAbbr": "PIT", "playerName": "Ben Roethlisberger", "tier": 1 },
+  { "stat": "5,109 Yds", "teamAbbr": "TB", "playerName": "Jameis Winston", "tier": 1 },
+  { "stat": "5,097 Yds", "teamAbbr": "KC", "playerName": "Patrick Mahomes", "tier": 1 },
+  { "stat": "5,038 Yds", "teamAbbr": "DET", "playerName": "Matthew Stafford", "tier": 1 },
+  { "stat": "4,944 Yds", "teamAbbr": "ATL", "playerName": "Matt Ryan", "tier": 2 },
+  { "stat": "4,933 Yds", "teamAbbr": "NYG", "playerName": "Eli Manning", "tier": 2 },
+  { "stat": "4,917 Yds", "teamAbbr": "WAS", "playerName": "Kirk Cousins", "tier": 2 },
+  { "stat": "4,903 Yds", "teamAbbr": "DAL", "playerName": "Tony Romo", "tier": 2 },
+  { "stat": "4,902 Yds", "teamAbbr": "DAL", "playerName": "Dak Prescott", "tier": 2 },
+  { "stat": "4,761 Yds", "teamAbbr": "IND", "playerName": "Andrew Luck", "tier": 2 },
+  { "stat": "4,710 Yds", "teamAbbr": "SD", "playerName": "Philip Rivers", "tier": 2 },
+  { "stat": "4,688 Yds", "teamAbbr": "LAR", "playerName": "Jared Goff", "tier": 3 },
+  { "stat": "4,671 Yds", "teamAbbr": "ARI", "playerName": "Carson Palmer", "tier": 3 },
+  { "stat": "4,643 Yds", "teamAbbr": "GB", "playerName": "Aaron Rodgers", "tier": 3 },
+  { "stat": "4,317 Yds", "teamAbbr": "BAL", "playerName": "Joe Flacco", "tier": 3 },
+  { "stat": "4,293 Yds", "teamAbbr": "CIN", "playerName": "Andy Dalton", "tier": 3 },
+  { "stat": "4,219 Yds", "teamAbbr": "SEA", "playerName": "Russell Wilson", "tier": 3 }
+]

@@ -1,0 +1,82 @@
+[
+    {
+        "text": "Quarterback",
+        "category": "Positions",
+        "groupName": "Positions"
+    },
+    {
+        "text": "Receiver",
+        "category": "Positions",
+        "groupName": "Positions"
+    },
+    {
+        "text": "Lineman",
+        "category": "Positions",
+        "groupName": "Positions"
+    },
+    {
+        "text": "Kicker",
+        "category": "Positions",
+        "groupName": "Positions"
+    },
+    {
+        "text": "Touchdown",
+        "category": "Scoring",
+        "groupName": "Scoring"
+    },
+    {
+        "text": "Field Goal",
+        "category": "Scoring",
+        "groupName": "Scoring"
+    },
+    {
+        "text": "Safety",
+        "category": "Scoring",
+        "groupName": "Scoring"
+    },
+    {
+        "text": "Convert",
+        "category": "Scoring",
+        "groupName": "Scoring"
+    },
+    {
+        "text": "Helmet",
+        "category": "Gear",
+        "groupName": "Gear"
+    },
+    {
+        "text": "Pads",
+        "category": "Gear",
+        "groupName": "Gear"
+    },
+    {
+        "text": "Cleats",
+        "category": "Gear",
+        "groupName": "Gear"
+    },
+    {
+        "text": "Jersey",
+        "category": "Gear",
+        "groupName": "Gear"
+    },
+    {
+        "text": "Draft",
+        "category": "Front Office",
+        "groupName": "Front Office"
+    },
+    {
+        "text": "Trade",
+        "category": "Front Office",
+        "groupName": "Front Office"
+    },
+    {
+        "text": "Waiver",
+        "category": "Front Office",
+        "groupName": "Front Office"
+    },
+    {
+        "text": "Contract",
+        "category": "Front Office",
+        "groupName": "Front Office"
+    }
+]

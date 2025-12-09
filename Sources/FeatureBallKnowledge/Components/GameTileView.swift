@@ -39,6 +39,7 @@ struct GameTileView: View {
             .padding(2)
         }
         .aspectRatio(1.0, contentMode: .fit) // Ensure square tiles
+        .animation(.easeInOut(duration: 0.3), value: tile.isRevealed)
     }
     
     // MARK: - Computed Properties
@@ -61,13 +62,13 @@ struct GameTileView: View {
     }
 }
 
-#Preview {
-    HStack {
-        GameTileView(tile: GameTileModel(id: UUID(), stat: "5,477 Yds", teamAbbr: "DEN", playerName: "Peyton Manning", isRevealed: false, tier: 1))
-            .frame(width: 100)
-        
-        GameTileView(tile: GameTileModel(id: UUID(), stat: "5,477 Yds", teamAbbr: "DEN", playerName: "Peyton Manning", isRevealed: true, tier: 1))
-            .frame(width: 100)
-    }
-    .padding()
-}
+// #Preview {
+//     HStack {
+//         GameTileView(tile: GameTileModel(id: UUID(), stat: "5,477 Yds", teamAbbr: "DEN", playerName: "Peyton Manning", isRevealed: false, tier: 1))
+//             .frame(width: 100)
+//         
+//         GameTileView(tile: GameTileModel(id: UUID(), stat: "5,477 Yds", teamAbbr: "DEN", playerName: "Peyton Manning", isRevealed: true, tier: 1))
+//             .frame(width: 100)
+//     }
+//     .padding()
+// }

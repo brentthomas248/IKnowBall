@@ -48,11 +48,16 @@ public struct SettingsView: View {
                 Text("Support")
             }
         }
+
+        #if os(iOS)
         .listStyle(.insetGrouped)
+        #else
+        .listStyle(.sidebar)
+        #endif
         .navigationTitle("Settings")
     }
 }
 
-#Preview {
-    SettingsView()
-}
+// #Preview {
+//     SettingsView()
+// }

@@ -113,7 +113,7 @@ public struct OverUnderGameplayView: View {
             .padding(.horizontal)
             .padding(.bottom, 32)
         }
-        .background(Color(uiColor: .systemBackground))
+        .background(Color.white)
         .navigationDestination(isPresented: $viewModel.showSummary) {
             ScoreSummaryView(
                 score: viewModel.score,
@@ -145,6 +145,6 @@ public struct OverUnderGameplayView: View {
     }
 }
 
-#Preview {
-    OverUnderGameplayView()
-}
+// #Preview {
+//     OverUnderGameplayView()
+// }

@@ -1,5 +1,7 @@
 import Foundation
 import SwiftUI
+import FeatureGamesShared
+import IKnowBallCore
 
 /// Represents a single tile in the game grid
 struct GameTileModel: Identifiable {
@@ -56,33 +58,18 @@ class BallKnowledgeViewModel {
         missedCount = 0
         
         // Reset Data
-        self.tiles = [
-            // Tier 1 (Gold)
-            GameTileModel(id: UUID(), stat: "5,477 Yds", teamAbbr: "DEN", playerName: "Peyton Manning", isRevealed: false, tier: 1),
-            GameTileModel(id: UUID(), stat: "5,476 Yds", teamAbbr: "NO", playerName: "Drew Brees", isRevealed: false, tier: 1),
-            GameTileModel(id: UUID(), stat: "5,235 Yds", teamAbbr: "NE", playerName: "Tom Brady", isRevealed: false, tier: 1),
-            GameTileModel(id: UUID(), stat: "5,129 Yds", teamAbbr: "PIT", playerName: "Ben Roethlisberger", isRevealed: false, tier: 1),
-            GameTileModel(id: UUID(), stat: "5,109 Yds", teamAbbr: "TB", playerName: "Jameis Winston", isRevealed: false, tier: 1),
-            GameTileModel(id: UUID(), stat: "5,097 Yds", teamAbbr: "KC", playerName: "Patrick Mahomes", isRevealed: false, tier: 1),
-            GameTileModel(id: UUID(), stat: "5,038 Yds", teamAbbr: "DET", playerName: "Matthew Stafford", isRevealed: false, tier: 1),
-
-            // Tier 2 (Silver)
-            GameTileModel(id: UUID(), stat: "4,944 Yds", teamAbbr: "ATL", playerName: "Matt Ryan", isRevealed: false, tier: 2),
-            GameTileModel(id: UUID(), stat: "4,933 Yds", teamAbbr: "NYG", playerName: "Eli Manning", isRevealed: false, tier: 2),
-            GameTileModel(id: UUID(), stat: "4,917 Yds", teamAbbr: "WAS", playerName: "Kirk Cousins", isRevealed: false, tier: 2),
-            GameTileModel(id: UUID(), stat: "4,903 Yds", teamAbbr: "DAL", playerName: "Tony Romo", isRevealed: false, tier: 2),
-            GameTileModel(id: UUID(), stat: "4,902 Yds", teamAbbr: "DAL", playerName: "Dak Prescott", isRevealed: false, tier: 2),
-            GameTileModel(id: UUID(), stat: "4,761 Yds", teamAbbr: "IND", playerName: "Andrew Luck", isRevealed: false, tier: 2),
-            GameTileModel(id: UUID(), stat: "4,710 Yds", teamAbbr: "SD", playerName: "Philip Rivers", isRevealed: false, tier: 2),
-
-            // Tier 3 (Bronze)
-            GameTileModel(id: UUID(), stat: "4,688 Yds", teamAbbr: "LAR", playerName: "Jared Goff", isRevealed: false, tier: 3),
-            GameTileModel(id: UUID(), stat: "4,671 Yds", teamAbbr: "ARI", playerName: "Carson Palmer", isRevealed: false, tier: 3),
-            GameTileModel(id: UUID(), stat: "4,643 Yds", teamAbbr: "GB", playerName: "Aaron Rodgers", isRevealed: false, tier: 3),
-            GameTileModel(id: UUID(), stat: "4,317 Yds", teamAbbr: "BAL", playerName: "Joe Flacco", isRevealed: false, tier: 3),
-            GameTileModel(id: UUID(), stat: "4,293 Yds", teamAbbr: "CIN", playerName: "Andy Dalton", isRevealed: false, tier: 3),
-            GameTileModel(id: UUID(), stat: "4,219 Yds", teamAbbr: "SEA", playerName: "Russell Wilson", isRevealed: false, tier: 3)
-        ]
+        // Load Data from Service
+        let questions = GameDataService.shared.loadBallKnowledgeQuestions()
+        self.tiles = questions.map { question in
+            GameTileModel(
+                id: UUID(),
+                stat: question.stat,
+                teamAbbr: question.teamAbbr,
+                playerName: question.playerName,
+                isRevealed: false,
+                tier: question.tier
+            )
+        }
         
         startTimer()
     }
@@ -127,12 +114,13 @@ class BallKnowledgeViewModel {
         }
         
         if matchFound {
+            HapticManager.shared.notification(type: .success)
             currentInput = ""
         } else {
             // Incorrect Guess
             missedCount += 1
             timeRemaining = max(0, timeRemaining - 10)
-            // Ideally trigger shake feedback here via a published property
+            HapticManager.shared.notification(type: .error)
         }
     }
     

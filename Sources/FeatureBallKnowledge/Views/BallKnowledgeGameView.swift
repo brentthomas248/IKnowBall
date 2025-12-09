@@ -80,12 +80,14 @@ public struct BallKnowledgeGameView: View {
                     TextField("Guess Player...", text: $viewModel.currentInput)
                         .focused($isInputFocused)
                         .autocorrectionDisabled()
+                        #if os(iOS)
                         .textInputAutocapitalization(.never) // Names are often simpler without auto-caps interfering
                         .submitLabel(.go)
+                        #endif
                         .onSubmit {
                             viewModel.submitGuess()
                         }
-                        .padding(.md)
+                        .padding(CGFloat.md)
                         .background(Color.secondary.opacity(0.15))
                         .clipShape(Capsule())
                         .accessibilityLabel("Player Name Input")
@@ -110,7 +112,9 @@ public struct BallKnowledgeGameView: View {
                 )
             }
             .navigationTitle("Ball Knowledge")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .onAppear {
                 isInputFocused = true
             }
@@ -134,6 +138,6 @@ public struct BallKnowledgeGameView: View {
     }
 }
 
-#Preview {
-    BallKnowledgeGameView()
-}
+// #Preview {
+//     BallKnowledgeGameView()
+// }

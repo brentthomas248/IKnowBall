@@ -1,12 +1,8 @@
 import SwiftUI
+import IKnowBallCore
 
-struct OverUnderQuestion {
-    let player: String
-    let team: String
-    let statContext: String
-    let lineValue: Double
-    let actualValue: Double
-}
+// OverUnderQuestion is now in FeatureGamesShared
+import FeatureGamesShared
 
 @Observable
 final class OverUnderViewModel {
@@ -33,19 +29,8 @@ final class OverUnderViewModel {
     var lastGuessWasCorrect: Bool?
     private var timer: Timer?
     
-    // Mock Data
-    private let questionPool: [OverUnderQuestion] = [
-        OverUnderQuestion(player: "Patrick Mahomes", team: "KC", statContext: "Passing Yards (2022)", lineValue: 5100.5, actualValue: 5250),
-        OverUnderQuestion(player: "Tyreek Hill", team: "MIA", statContext: "Receiving Yards (2023)", lineValue: 1750.5, actualValue: 1799),
-        OverUnderQuestion(player: "Christian McCaffrey", team: "SF", statContext: "Total Scrimmage Yards (2023)", lineValue: 2100.5, actualValue: 2023),
-        OverUnderQuestion(player: "Lamar Jackson", team: "BAL", statContext: "Rushing Yards (2019)", lineValue: 1100.5, actualValue: 1206),
-        OverUnderQuestion(player: "Justin Jefferson", team: "MIN", statContext: "Receptions (2022)", lineValue: 125.5, actualValue: 128),
-        OverUnderQuestion(player: "Cooper Kupp", team: "LAR", statContext: "Receiving Yards (2021)", lineValue: 1900.5, actualValue: 1947),
-        OverUnderQuestion(player: "Travis Kelce", team: "KC", statContext: "Receiving Yards (2020)", lineValue: 1400.5, actualValue: 1416),
-        OverUnderQuestion(player: "Derrick Henry", team: "TEN", statContext: "Rushing Yards (2020)", lineValue: 2000.5, actualValue: 2027),
-        OverUnderQuestion(player: "Josh Allen", team: "BUF", statContext: "Total Touchdowns (2023)", lineValue: 42.5, actualValue: 44),
-        OverUnderQuestion(player: "T.J. Watt", team: "PIT", statContext: "Sacks (2021)", lineValue: 21.5, actualValue: 22.5)
-    ]
+    // Data
+    private var questionPool: [OverUnderQuestion] = []
     
     init() {
         startNewGame()
@@ -72,9 +57,11 @@ final class OverUnderViewModel {
             score += 1
             correctCount += 1
             lastGuessWasCorrect = true
+            HapticManager.shared.notification(type: .success)
         } else {
             missedCount += 1
             lastGuessWasCorrect = false
+            HapticManager.shared.notification(type: .error)
         }
         
         gameState = .showingResult
@@ -97,6 +84,11 @@ final class OverUnderViewModel {
             endGame()
             return
         }
+        
+        if questionPool.isEmpty {
+            questionPool = GameDataService.shared.loadOverUnderQuestions()
+        }
+        
         currentQuestion = questionPool.randomElement()
         gameState = .playing
         lastGuessWasCorrect = nil

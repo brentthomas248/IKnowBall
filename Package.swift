@@ -25,21 +25,22 @@ let package = Package(
         // MARK: - Shared Feature Code
         .target(
             name: "FeatureGamesShared",
-            dependencies: ["IKnowBallDesignSystem"]
+            dependencies: ["IKnowBallDesignSystem"],
+            resources: [.process("Resources")]
         ),
         
         // MARK: - Features
         .target(
             name: "FeatureBallKnowledge",
-            dependencies: ["FeatureGamesShared", "IKnowBallDesignSystem", "FeatureScoreSummary"]
+            dependencies: ["FeatureGamesShared", "IKnowBallDesignSystem", "FeatureScoreSummary", "IKnowBallCore"]
         ),
         .target(
             name: "FeatureConnections",
-            dependencies: ["FeatureGamesShared", "IKnowBallDesignSystem", "FeatureScoreSummary"]
+            dependencies: ["FeatureGamesShared", "IKnowBallDesignSystem", "FeatureScoreSummary", "IKnowBallCore"]
         ),
         .target(
             name: "FeatureOverUnder",
-            dependencies: ["FeatureGamesShared", "IKnowBallDesignSystem", "FeatureScoreSummary"]
+            dependencies: ["FeatureGamesShared", "IKnowBallDesignSystem", "FeatureScoreSummary", "IKnowBallCore"]
 
         ),
         .target(
@@ -77,6 +78,14 @@ let package = Package(
         .testTarget(
             name: "FeatureBallKnowledgeTests",
             dependencies: ["FeatureBallKnowledge"]
+        ),
+        .testTarget(
+            name: "FeatureConnectionsTests",
+            dependencies: ["FeatureConnections"]
+        ),
+        .testTarget(
+            name: "FeatureOverUnderTests",
+            dependencies: ["FeatureOverUnder"]
         )
     ]
 )
