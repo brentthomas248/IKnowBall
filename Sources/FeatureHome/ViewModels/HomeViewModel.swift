@@ -43,6 +43,10 @@ final class HomeViewModel {
             do {
                 let games = try await gameDataService.loadGameList()
                 logger.info("Loaded \(games.count) games")
+                
+                // TESTING: Delay to show skeleton loader
+                try? await Task.sleep(for: .seconds(2))
+                
                 await MainActor.run {
                     self.state = .loaded(user: user, games: games)
                 }

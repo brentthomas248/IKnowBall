@@ -61,22 +61,50 @@ public struct HomeView: View {
     
     private var loadingState: some View {
         VStack(spacing: .xl) {
-            // User Stats Skeleton
+            // User Stats Skeleton - Matches actual UserStatsCard layout
             CardView.elevated {
-                HStack(spacing: .md) {
-                    Circle()
-                        .fill(Color.appSurface.opacity(0.3))
-                        .squareFrame(.avatarLarge)
-                    
-                    VStack(alignment: .leading, spacing: .xs) {
-                        RoundedRectangle(cornerRadius: 4, style: .continuous)
+                VStack(spacing: .md) {
+                    HStack(spacing: .md) {
+                        // Avatar placeholder (matches IconView.circled)
+                        Circle()
                             .fill(Color.appSurface.opacity(0.3))
-                            .frame(width: 120, height: .skeletonLarge)
-                        RoundedRectangle(cornerRadius: 4, style: .continuous)
-                            .fill(Color.appSurface.opacity(0.3))
-                            .frame(width: 80, height: .skeletonSmall)
+                            .squareFrame(.avatarLarge)
+                        
+                        // User Info placeholder
+                        VStack(alignment: .leading, spacing: .xxs) {
+                            RoundedRectangle(cornerRadius: 4, style: .continuous)
+                                .fill(Color.appSurface.opacity(0.3))
+                                .frame(width: 120, height: .skeletonLarge)
+                            RoundedRectangle(cornerRadius: 4, style: .continuous)
+                                .fill(Color.appSurface.opacity(0.3))
+                                .frame(width: 80, height: .skeletonSmall)
+                        }
+                        
+                        Spacer()
+                        
+                        // XP Display placeholder
+                        VStack(alignment: .trailing, spacing: .xxs) {
+                            RoundedRectangle(cornerRadius: 4, style: .continuous)
+                                .fill(Color.appSurface.opacity(0.3))
+                                .frame(width: 40, height: .skeletonMedium)
+                            RoundedRectangle(cornerRadius: 4, style: .continuous)
+                                .fill(Color.appSurface.opacity(0.3))
+                                .frame(width: 25, height: .skeletonSmall)
+                        }
                     }
-                    Spacer()
+                    
+                    // Progress Bar Section placeholder
+                    VStack(alignment: .leading, spacing: .xxs) {
+                        // Progress label
+                        RoundedRectangle(cornerRadius: 4, style: .continuous)
+                            .fill(Color.appSurface.opacity(0.3))
+                            .frame(width: 150, height: .skeletonSmall)
+                        
+                        // Progress bar
+                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                            .fill(Color.appSurface.opacity(0.3))
+                            .frame(height: .progressBarMedium)
+                    }
                 }
             }
             .redacted(reason: .placeholder)
@@ -85,9 +113,10 @@ public struct HomeView: View {
             ForEach(0..<3) { _ in
                 CardView.elevated {
                     HStack(spacing: .md) {
-                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        // Game icon placeholder (matches IconView size)
+                        Circle()
                             .fill(Color.appSurface.opacity(0.3))
-                            .squareFrame(.avatarMedium)
+                            .squareFrame(.iconXLarge)
                         
                         VStack(alignment: .leading, spacing: .xxs) {
                             RoundedRectangle(cornerRadius: 4, style: .continuous)
@@ -104,6 +133,7 @@ public struct HomeView: View {
             }
         }
     }
+
     
     // MARK: - Loaded State
     
