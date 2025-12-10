@@ -104,7 +104,7 @@ final class ScoreSummaryViewModel {
         missedCount: Int = 3,
         gameDuration: TimeInterval = 60,
         metrics: XPCalculator.GameMetrics? = nil,
-        shouldAwardXP: Bool = true,  // NEW: Only award XP if true
+        shouldAwardXP: Bool = false,  // NEW: Only award XP if true
         profileService: UserProfileServiceProtocol = UserProfileService.shared
     ) {
         // Calculate XP breakdown FIRST (before any self. assignments)
