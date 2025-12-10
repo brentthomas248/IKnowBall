@@ -137,7 +137,7 @@ public struct ScoreSummaryView: View {
                             .font(.headline)
                             .foregroundColor(.primary)
                             .frame(maxWidth: .infinity)
-                            .frame(height: 50)
+                            .frame(height: .buttonHeightCompact)
                             .background(Color.secondary.opacity(0.15))
                             .clipShape(Capsule())
                     }
@@ -150,7 +150,7 @@ public struct ScoreSummaryView: View {
                             .font(.headline)
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
-                            .frame(height: 50)
+                            .frame(height: .buttonHeightCompact)
                             .background(Color.black)
                             .clipShape(Capsule())
                     }

@@ -1,8 +1,11 @@
 import Foundation
 import IKnowBallCore
+import OSLog
 
 public final class GameDataService: GameDataServiceProtocol {
     public static let shared = GameDataService()
+    
+    private let logger = Logger(subsystem: "com.iknowball", category: "GameDataService")
     
     private init() {}
     
@@ -10,7 +13,7 @@ public final class GameDataService: GameDataServiceProtocol {
     /// - Throws: AppError if data cannot be loaded or decoded
     public func fetchData<T: Decodable>(from fileName: String) async throws -> [T] {
         guard let url = Bundle.module.url(forResource: fileName, withExtension: "json") else {
-            print("❌ GameDataService: Could not find \(fileName).json in bundle.")
+            logger.error("Could not find \(fileName).json in bundle")
             throw AppError.dataNotFound(fileName: fileName)
         }
         
@@ -20,11 +23,11 @@ public final class GameDataService: GameDataServiceProtocol {
             let items = try decoder.decode([T].self, from: data)
             
             guard !items.isEmpty else {
-                print("⚠️ GameDataService: \(fileName).json returned empty array")
+                logger.warning("\(fileName).json returned empty array")
                 throw AppError.emptyDataSet(fileName: fileName)
             }
             
-            print("✅ GameDataService: Successfully loaded \(items.count) items from \(fileName).json")
+            logger.info("Successfully loaded \(items.count) items from \(fileName).json")
             return items
         } catch let decodingError as DecodingError {
             let reason: String
@@ -41,12 +44,12 @@ public final class GameDataService: GameDataServiceProtocol {
                 reason = "Unknown decoding error"
             }
             
-            print("❌ GameDataService: Failed to decode \(fileName).json. Error: \(reason)")
+            logger.error("Failed to decode \(fileName).json. Error: \(reason)")
             
-            // Print raw string to debug JSON format issues
+            // Log raw string to debug JSON format issues
             #if DEBUG
             if let string = try? String(contentsOf: url) {
-                print("📋 Raw JSON content (first 500 chars): \(string.prefix(500))")
+                logger.debug("Raw JSON content (first 500 chars): \(string.prefix(500))")
             }
             #endif
             
@@ -56,7 +59,7 @@ public final class GameDataService: GameDataServiceProtocol {
             throw appError
         } catch {
             // Catch-all for other errors
-            print("❌ GameDataService: Unexpected error loading \(fileName).json: \(error)")
+            logger.error("Unexpected error loading \(fileName).json: \(error.localizedDescription)")
             throw AppError.invalidData(fileName: fileName, reason: error.localizedDescription)
         }
     }

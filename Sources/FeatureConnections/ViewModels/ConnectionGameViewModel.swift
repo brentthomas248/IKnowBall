@@ -1,6 +1,7 @@
 import SwiftUI
 import FeatureGamesShared
 import IKnowBallCore
+import OSLog
 
 @Observable
 final class ConnectionGameViewModel {
@@ -47,6 +48,8 @@ final class ConnectionGameViewModel {
         tiles.filter { $0.isSelected }
     }
     
+    private let logger = Logger(subsystem: "com.iknowball", category: "ConnectionGameViewModel")
+    
     init() {
         startNewGame()
     }
@@ -71,7 +74,7 @@ final class ConnectionGameViewModel {
                 // Handle error - fall back to empty state
                 await MainActor.run {
                     self.tiles = []
-                    print("Error loading Connections data: \(error.localizedDescription)")
+                    logger.error("Error loading Connections data: \(error.localizedDescription)")
                 }
             }
         }

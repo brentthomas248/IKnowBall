@@ -62,6 +62,15 @@ public extension CGFloat {
     /// Progress bar height (medium)
     static let progressBarMedium: CGFloat = 8
     
+    /// Compact button height (50pt) - For secondary actions
+    static let buttonHeightCompact: CGFloat = 50
+    
+    /// Game button height (80pt) - For Over/Under game buttons
+    static let gameButtonHeight: CGFloat = 80
+    
+    /// Large spacer height (40pt) - For vertical spacing in game views
+    static let spacerLarge: CGFloat = 40
+    
     // MARK: - Card & Container Sizes
     
     /// Minimum card height

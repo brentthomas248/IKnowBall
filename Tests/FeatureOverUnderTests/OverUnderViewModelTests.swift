@@ -1,7 +1,6 @@
-// import XCTest
-// @testable import FeatureOverUnder
+import XCTest
+@testable import FeatureOverUnder
 
-/*
 final class OverUnderViewModelTests: XCTestCase {
     
     var viewModel: OverUnderViewModel!
@@ -88,4 +87,3 @@ final class OverUnderViewModelTests: XCTestCase {
         XCTAssertTrue(viewModel.showSummary)
     }
 }
-*/

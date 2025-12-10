@@ -2,6 +2,7 @@ import Foundation
 import SwiftUI
 import FeatureGamesShared
 import IKnowBallCore
+import OSLog
 
 // GameTileModel removed, replaced by BallKnowledgeQuestion
 
@@ -28,6 +29,7 @@ class BallKnowledgeViewModel {
     var tiles: [BallKnowledgeQuestion] = []
     
     private var timer: Timer?
+    private let logger = Logger(subsystem: "com.iknowball", category: "BallKnowledgeViewModel")
     
     var isGameOver: Bool {
         state == .finished
@@ -64,7 +66,7 @@ class BallKnowledgeViewModel {
                 // Handle error - fall back to empty state or show error message
                 await MainActor.run {
                     self.tiles = []
-                    print("Error loading game data: \(error.localizedDescription)")
+                    logger.error("Error loading game data: \(error.localizedDescription)")
                 }
             }
         }

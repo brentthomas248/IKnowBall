@@ -2,6 +2,7 @@ import SwiftUI
 import FeatureGamesShared
 import FeatureSettings
 import IKnowBallCore
+import OSLog
 
 @Observable
 final class HomeViewModel {
@@ -16,6 +17,7 @@ final class HomeViewModel {
     private let profileService: UserProfileServiceProtocol
     private let gameDataService: GameDataServiceProtocol
     private let analyticsService: AnalyticsServiceProtocol
+    private let logger = Logger(subsystem: "com.iknowball", category: "HomeViewModel")
     
     init(
         profileService: UserProfileServiceProtocol = UserProfileService.shared,
@@ -28,7 +30,7 @@ final class HomeViewModel {
     }
 
     func loadData() {
-        print("DEBUG: HomeViewModel.loadData() called")
+        logger.debug("loadData() called")
         state = .loading
         
         // Track screen view
@@ -40,7 +42,7 @@ final class HomeViewModel {
         Task {
             do {
                 let games = try await gameDataService.loadGameList()
-                print("DEBUG: Loaded \\(games.count) games")
+                logger.info("Loaded \(games.count) games")
                 await MainActor.run {
                     self.state = .loaded(user: user, games: games)
                 }
@@ -48,7 +50,7 @@ final class HomeViewModel {
                 // Handle error
                 await MainActor.run {
                     self.state = .error(error.localizedDescription)
-                    print("ERROR: Failed to load games: \\(error.localizedDescription)")
+                    logger.error("Failed to load games: \(error.localizedDescription)")
                 }
             }
         }

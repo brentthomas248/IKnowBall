@@ -72,6 +72,7 @@ public final class ErrorHandler: Sendable {
             print("🔴 \(message)\n\(details)")
             #endif
             
+            
             // Log to OSLog based on severity
             switch severity {
             case .low:
@@ -85,10 +86,6 @@ public final class ErrorHandler: Sendable {
             // Generic error
             let message = "[Error\(contextString)] \(error.localizedDescription)"
             logger.error("\(message)")
-            
-            #if DEBUG
-            print("🔴 \(message)")
-            #endif
         }
     }
     

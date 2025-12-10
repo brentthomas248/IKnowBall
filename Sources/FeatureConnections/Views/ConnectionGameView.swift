@@ -89,7 +89,7 @@ public struct ConnectionGameView: View {
                         .font(.system(size: 14, weight: .bold))
                         .minimumScaleFactor(0.8)
                         .frame(maxWidth: .infinity)
-                        .frame(height: 70)
+                        .frame(height: .gameTileHeight)
                         .background(tile.isSelected ? Color.gray : Color.gray.opacity(0.2))
                         .foregroundStyle(tile.isSelected ? .white : .primary)
                         .clipShape(RoundedRectangle(cornerRadius: .sm))

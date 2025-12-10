@@ -1,5 +1,6 @@
 import SwiftUI
 import IKnowBallCore
+import OSLog
 
 // OverUnderQuestion is now in FeatureGamesShared
 import FeatureGamesShared
@@ -31,6 +32,7 @@ final class OverUnderViewModel {
     
     // Data
     private var questionPool: [OverUnderQuestion] = []
+    private let logger = Logger(subsystem: "com.iknowball", category: "OverUnderViewModel")
     
     init() {
         startNewGame()
@@ -107,7 +109,7 @@ final class OverUnderViewModel {
                 // Handle error - fall back to empty pool
                 await MainActor.run {
                     self.questionPool = []
-                    print("Error loading Over/Under questions: \(error.localizedDescription)")
+                   logger.error("Error loading Over/Under questions: \(error.localizedDescription)")
                 }
                 return
             }

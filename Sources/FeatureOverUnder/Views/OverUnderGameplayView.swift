@@ -55,7 +55,7 @@ public struct OverUnderGameplayView: View {
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
                     
-                    Spacer().frame(height: 40)
+                    Spacer().frame(height: .spacerLarge)
                     
                     // The Line / Result
                     if viewModel.gameState == .showingResult {
@@ -88,7 +88,7 @@ public struct OverUnderGameplayView: View {
                         .fontWeight(.heavy)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
-                        .frame(height: 80)
+                        .frame(height: .gameButtonHeight)
                         .background(Color.red)
                         .cornerRadius(.md)
                 }
@@ -104,7 +104,7 @@ public struct OverUnderGameplayView: View {
                         .fontWeight(.heavy)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
-                        .frame(height: 80)
+                        .frame(height: .gameButtonHeight)
                         .background(Color.green)
                         .cornerRadius(.md)
                 }
