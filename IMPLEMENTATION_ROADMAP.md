@@ -99,4 +99,16 @@ This document tracks high-level milestones. Agents should update this file after
 
 ---
 
-*Last Updated: Dec 9, 2025 (18:19) - Code quality phase complete, production-ready.*
+## ⚠️ Known Issues
+
+### CLI Testing
+- **Issue**: XCTest requires Xcode to run - this is expected behavior.
+- **Workaround**: Open project in Xcode and run tests with `Cmd + U`.
+
+### SwiftUI Previews
+- **Issue**: Some `#Preview` blocks are commented out due to CLI macro plugin limitations.
+- **Workaround**: Uncomment when working in Xcode.
+
+---
+
+*Last Updated: Dec 10, 2025 (15:45) - Documentation streamlined, single sources of truth established.*

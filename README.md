@@ -9,28 +9,8 @@ This repository is designed to be **agent-friendly**. If you are an AI assistant
 
 ## 🏗 Architecture
 
-### Modular Architecture
-We follow a strictly modularized architecture with 10 distinct SPM targets.
-
-**Module Hierarchy:**
-```
-Sources/
-├── IKnowBallApp/        # @main Entry Point
-├── IKnowBallCore/       # Shared Utilities
-├── IKnowBallDesignSystem/ # UI Tokens & Components (Public)
-├── FeatureHome/         # Dashboard & Routing
-├── FeatureSettings/     # Settings Feature
-├── FeatureGamesShared/  # Shared Game Models (GameItem, GameTile)
-├── FeatureBallKnowledge/# Specific Game Logic
-├── FeatureConnections/  # Specific Game Logic
-├── FeatureOverUnder/    # Specific Game Logic
-└── FeatureScoreSummary/ # Shared Results Screen
-```
-
-### Dependency Graph
-- **Features** (Home, Games, Settings) depend on **DesignSystem** and **Core**.
-- **Home** depends on all Game Features.
-- **Game Features** depend on **FeatureGamesShared** and **FeatureScoreSummary**.
+### Architecture Overview
+For detailed architectural rules, module hierarchy, dependency graph, and agent development protocols, refer to [gemini.md](file:///Users/brentthomas1/Desktop/Brent/Projects/IKnowBall/gemini.md).
 
 ### Key Technologies
 *   **UI Framework**: SwiftUI (iOS 17+)
@@ -39,23 +19,6 @@ Sources/
 *   **Navigation**: `NavigationStack` with programmatic paths where necessary.
 *   **Package Management**: Swift Package Manager (Local `IKnowBallFeature` package).
 
----
-
-## 🤖 AI Agent Protocol / "Skills"
-
-This project is linked to the **iOS Master Skills** extension (`ios-master-skills copy`). You MUST check this extension for protocols before starting work.
-
-| Task Category | Required Skill / Protocol |
-| :--- | :--- |
-| **New Features** | `design_screen` (Design interactions FIRST) |
-| **Project Setup** | `scaffold_new_app` (Only for new repos) |
-| **Coding** | `implement_component` (Strict HIG compliance) |
-
-### Inviolable Rules
-1.  **Design First**: Never write SwiftUI code without a confirmed design plan (JSON/Markdown).
-2.  **No Magic Numbers**: Use semantic tokens (e.g., `.padding(.md)`) from the Design System.
-3.  **Touch Targets**: Minimum **44x44pt** for ANY interactive element.
-4.  **Accessibility**: All interactive elements must have labels.
 
 ---
 

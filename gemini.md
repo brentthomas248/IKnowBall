@@ -57,28 +57,24 @@ Sources/
 - **Semantic Tokens**: Use `.padding(.md)` instead of `16`. Use `.font(.body)`.
 - **Touch Targets**: Minimum 44x44pt.
 
+#### 5. Feature Isolation & Anti-Patterns
+- **Do NOT** place files in `Sources/` root. Always use the correct module.
+- **Do NOT** import `FeatureHome` into a Game module (creates circular dependency).
+- **Navigation Flow**: `Home` knows about `Games`, but `Games` do not know about `Home` (use callbacks or coordinator pattern).
+
+#### 6. File Placement Guidelines
+- **New Features**: Create new folder `Sources/FeatureName` and add target to `Package.swift`.
+- **New Shared Logic**: Put in `Sources/IKnowBallCore` or `FeatureGamesShared`.
+- **New UI Component**: Put in `Sources/IKnowBallDesignSystem`.
+
 ## Connected Extensions
 
 ### iOS Master Architect Extension
 You have access to the **iOS Master Architect** skill library located at:
 `/Users/brentthomas1/Desktop/Brent/Projects/MasterSkillsRepo/ios-master-skills`
 
-**IMPORTANT**: Before performing any iOS development task, you MUST read the routing table from:
-`/Users/brentthomas1/Desktop/Brent/Projects/MasterSkillsRepo/ios-master-skills/GEMINI.md`
-
-This extension provides three core skills:
-
-1. **Scaffold New App** - Initialize projects with Golden Path structure
-   - Trigger: "Start a new app", "Init project", "Create feature structure"
-   - File: `ios-master-skills/skills/scaffold_new_app/SKILL.md`
-
-2. **Design Screen** - Create HIG-compliant UI specifications
-   - Trigger: "Design a screen", "Plan UI", "Wireframe"
-   - File: `ios-master-skills/skills/design_screen/SKILL.md`
-
-3. **Implement Component** - Generate production SwiftUI code
-   - Trigger: "Build a button", "Implement view", "Create component"
-   - File: `ios-master-skills/skills/implement_component/SKILL.md`
+**Skill Routing Protocol:**
+You MUST read the routing table at `/Users/brentthomas1/Desktop/Brent/Projects/MasterSkillsRepo/ios-master-skills/GEMINI.md` to determine which skill file to load for any iOS development task. Do not rely on hardcoded triggers in this file—the extension's GEMINI.md is the authoritative source.
 
 ## Knowledge Base
 

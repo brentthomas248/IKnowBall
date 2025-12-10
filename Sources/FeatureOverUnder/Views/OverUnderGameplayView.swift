@@ -79,34 +79,22 @@ public struct OverUnderGameplayView: View {
             // MARK: - Controls
             HStack(spacing: .md) {
                 // UNDER Button
-                Button {
+                GameChoiceButton(
+                    title: "UNDER",
+                    color: .appError,
+                    isDisabled: viewModel.gameState != .playing
+                ) {
                     viewModel.submitGuess(isOver: false)
-                } label: {
-                    Text("UNDER")
-                        .font(.appTitle2)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: .gameButtonHeight)
-                        .background(Color.appError)
-                        .cornerRadius(.md)
                 }
-                .disabled(viewModel.gameState != .playing)
-                .opacity(viewModel.gameState != .playing ? 0.6 : 1.0)
                 
                 // OVER Button
-                Button {
+                GameChoiceButton(
+                    title: "OVER",
+                    color: .appSuccess,
+                    isDisabled: viewModel.gameState != .playing
+                ) {
                     viewModel.submitGuess(isOver: true)
-                } label: {
-                    Text("OVER")
-                        .font(.appTitle2)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: .gameButtonHeight)
-                        .background(Color.appSuccess)
-                        .cornerRadius(.md)
                 }
-                .disabled(viewModel.gameState != .playing)
-                .opacity(viewModel.gameState != .playing ? 0.6 : 1.0)
             }
             .padding(.horizontal, .md)
             .padding(.bottom, .xl)
