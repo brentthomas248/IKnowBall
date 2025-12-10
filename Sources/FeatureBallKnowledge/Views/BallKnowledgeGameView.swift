@@ -28,10 +28,10 @@ public struct BallKnowledgeGameView: View {
                     // Header
                     VStack(spacing: .xs) {
                         Text("Best Single Season (2010s)")
-                            .font(.title2)
-                            .fontWeight(.bold)
+                            .font(.appTitle2)
+                            .foregroundStyle(Color.appTextPrimary)
                             .multilineTextAlignment(.center)
-                            .padding(.horizontal)
+                            .padding(.horizontal, .md)
                         
                         HStack {
                             Label {
@@ -40,8 +40,8 @@ public struct BallKnowledgeGameView: View {
                             } icon: {
                                 Image(systemName: "clock")
                             }
-                            .font(.headline)
-                            .foregroundColor(viewModel.timeRemaining < 30 ? .red : .primary)
+                            .font(.appHeadline)
+                            .foregroundColor(viewModel.timeRemaining < 30 ? Color.appError : Color.appTextPrimary)
                             
                             Spacer()
                             
@@ -50,9 +50,9 @@ public struct BallKnowledgeGameView: View {
                                     .monospacedDigit()
                             } icon: {
                                 Image(systemName: "trophy.fill")
-                                    .foregroundColor(.yellow)
+                                    .foregroundColor(Color.appWarning)
                             }
-                            .font(.headline)
+                            .font(.appHeadline)
                         }
                         .padding(.horizontal, .lg)
                         .padding(.bottom, .md)
@@ -87,8 +87,8 @@ public struct BallKnowledgeGameView: View {
                         .onSubmit {
                             viewModel.submitGuess()
                         }
-                        .padding(CGFloat.md)
-                        .background(Color.secondary.opacity(0.15))
+                        .padding(.md)
+                        .background(Color.appSurface.opacity(0.5))
                         .clipShape(Capsule())
                         .accessibilityLabel("Player Name Input")
                     
@@ -98,7 +98,7 @@ public struct BallKnowledgeGameView: View {
                         Image(systemName: "arrow.up.circle.fill")
                             .resizable()
                             .squareFrame(.minimumTouchTarget)
-                            .foregroundColor(.blue)
+                            .foregroundColor(Color.appPrimary)
                     }
                     .accessibilityLabel("Submit Guess")
                 }

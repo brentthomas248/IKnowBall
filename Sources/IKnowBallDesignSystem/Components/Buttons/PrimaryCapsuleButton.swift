@@ -22,7 +22,7 @@ public struct PrimaryCapsuleButton: View {
                 .padding(.horizontal, .lg)
                 .frame(height: .buttonHeight)
                 .frame(maxWidth: .infinity)
-                .background(isDisabled ? Color.gray.opacity(0.3) : Color.primary)
+                .background(isDisabled ? Color.gray.opacity(0.3) : Color.appPrimary)
                 .foregroundStyle(isDisabled ? Color.gray : Color.white)
                 .clipShape(Capsule())
         }

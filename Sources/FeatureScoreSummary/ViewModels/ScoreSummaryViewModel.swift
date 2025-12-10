@@ -1,5 +1,6 @@
 import SwiftUI
 import FeatureSettings
+import IKnowBallCore
 
 @Observable
 final class ScoreSummaryViewModel {
@@ -24,6 +25,7 @@ final class ScoreSummaryViewModel {
     // XP specific properties
     var currentXp: Int
     var xpGained: Int
+    var xpBreakdown: XPCalculator.XPBreakdown
     var xpRequiredForNextLevel: Int
     
     // Dependency
@@ -66,6 +68,33 @@ final class ScoreSummaryViewModel {
         if case .error(let message) = state { return message }
         return ""
     }
+    
+    // XP Breakdown for display
+    var xpBreakdownItems: [(String, Int)] {
+        var items: [(String, Int)] = []
+        
+        items.append(("Base Score", xpBreakdown.baseXP))
+        
+        if xpBreakdown.scoreBonus > 0 {
+            items.append(("Performance", xpBreakdown.scoreBonus))
+        }
+        
+        if xpBreakdown.accuracyBonus > 0 {
+            let total = correctCount + missedCount
+            let accuracy = total > 0 ? Int(Double(correctCount) / Double(total) * 100) : 0
+            items.append(("Accuracy (\(accuracy)%)", xpBreakdown.accuracyBonus))
+        }
+        
+        if xpBreakdown.speedBonus > 0 {
+            items.append(("Speed Bonus", xpBreakdown.speedBonus))
+        }
+        
+        if xpBreakdown.perfectBonus > 0 {
+            items.append(("Perfect Game", xpBreakdown.perfectBonus))
+        }
+        
+        return items
+    }
 
     // MARK: - Initialization
 
@@ -74,25 +103,50 @@ final class ScoreSummaryViewModel {
         correctCount: Int = 12,
         missedCount: Int = 3,
         gameDuration: TimeInterval = 60,
-        xpGained: Int = 450,
+        metrics: XPCalculator.GameMetrics? = nil,
+        shouldAwardXP: Bool = true,  // NEW: Only award XP if true
         profileService: UserProfileServiceProtocol = UserProfileService.shared
     ) {
+        // Calculate XP breakdown FIRST (before any self. assignments)
+        let breakdown: XPCalculator.XPBreakdown
+        if let metrics = metrics {
+            breakdown = XPCalculator.calculate(metrics: metrics)
+        } else {
+            // Fallback to default metrics if none provided
+            let defaultMetrics = XPCalculator.GameMetrics(
+                score: score,
+                correctCount: correctCount,
+                totalQuestions: correctCount + missedCount,
+                timeRemaining: nil,
+                isPerfect: missedCount == 0
+            )
+            breakdown = XPCalculator.calculate(metrics: defaultMetrics)
+        }
+        
+        // Get profile info BEFORE initializing
+        let profile = profileService.userProfile
+        
+        // Now initialize ALL stored properties
         self.score = score
         self.correctCount = correctCount
         self.missedCount = missedCount
         self.gameDuration = gameDuration
-        self.xpGained = xpGained
         self.profileService = profileService
-        
-        // Award XP
-        profileService.addXP(xpGained)
-        
-        // Read updated state for display
-        let profile = profileService.userProfile
+        self.xpBreakdown = breakdown
+        self.xpGained = breakdown.total
         self.currentXp = Int(profile.currentXP)
         self.xpRequiredForNextLevel = Int(profile.maxXP)
-        
         self.state = .content
+        
+        // Award XP ONLY if shouldAwardXP is true (prevents preview/navigation from awarding XP)
+        if shouldAwardXP {
+            profileService.addXP(breakdown.total)
+            
+            // Update current values after awarding XP
+            let updatedProfile = profileService.userProfile
+            self.currentXp = Int(updatedProfile.currentXP)
+            self.xpRequiredForNextLevel = Int(updatedProfile.maxXP)
+        }
     }
 
     // MARK: - Methods

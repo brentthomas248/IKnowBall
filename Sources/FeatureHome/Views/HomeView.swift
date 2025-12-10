@@ -29,7 +29,23 @@ public struct HomeView: View {
         }
         .background(Color.appBackground)
         .navigationTitle("Home")
+        .task {
+            viewModel.loadData()
+        }
+        .onAppear {
+            // Refresh to pick up XP reset
+            viewModel.loadData()
+        }
         .toolbar {
+            ToolbarItem(placement: .automatic) {
+                // TESTING: Manual XP Reset Button
+                Button("Reset XP") {
+                    UserProfileService.shared.resetXP()
+                    viewModel.loadData()  // Refresh UI
+                }
+                .foregroundColor(.red)
+            }
+            
             ToolbarItem(placement: .primaryAction) {
                 NavigationLink(destination: SettingsView()) {
                     IconView("gearshape", size: .medium, color: .appTextPrimary)

@@ -21,21 +21,17 @@ public struct ConnectionGameView: View {
         VStack(spacing: .lg) {
             statusHeader
             
-            // Solved Groups Section
-            if !viewModel.solvedGroups.isEmpty {
-                solvedGroupsSection
-            }
-            
             Spacer()
             
-            gameGrid
+            // Unified grid - solved groups appear inline
+            unifiedGrid
             
             Spacer()
             
             actionFooter
         }
         .padding(.horizontal, .md)
-        .navigationTitle("NFL Connection")
+        .navigationTitle("NFL Connections")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif
@@ -63,74 +59,100 @@ public struct ConnectionGameView: View {
     private var statusHeader: some View {
         HStack(spacing: .md) {
             Text("Mistakes remaining:")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .font(.appCallout)
+                .foregroundStyle(Color.appTextSecondary)
             
             HStack(spacing: .xs) {
                 ForEach(0..<4) { index in
                     Circle()
-                        .fill(index < viewModel.mistakesRemaining ? Color.gray : Color.clear)
+                        .fill(index < viewModel.mistakesRemaining ? Color.appTextTertiary : Color.clear)
                         .squareFrame(.mistakeIndicator)
-                        .overlay(Circle().stroke(Color.gray, lineWidth: 1))
-                        // Simple visual logic: Filled if remaining, empty if lost
+                        .overlay(Circle().stroke(Color.appTextTertiary, lineWidth: 1))
                 }
             }
         }
         .padding(.top, .md)
     }
     
-    private var gameGrid: some View {
-        LazyVGrid(columns: columns, spacing: .sm) {
-            ForEach(viewModel.activeTiles) { tile in
-                Button {
-                    viewModel.toggleSelection(tile)
-                } label: {
-                    Text(tile.text)
-                        .font(.system(size: 14, weight: .bold))
-                        .minimumScaleFactor(0.8)
+    // MARK: - Unified Grid (NYT Style)
+    
+    private var unifiedGrid: some View {
+        VStack(spacing: .sm) {
+            // Display solved groups as rows
+            ForEach(viewModel.solvedGroups) { group in
+                solvedGroupRow(group)
+                    .transition(.asymmetric(
+                        insertion: .scale(scale: 0.8).combined(with: .opacity),
+                        removal: .opacity
+                    ))
+            }
+            
+            // Display active tiles in grid
+            if !viewModel.activeTiles.isEmpty {
+                activeTilesGrid
+            }
+        }
+        .animation(.spring(response: 0.6, dampingFraction: 0.7), value: viewModel.solvedGroups.count)
+        .animation(.spring(response: 0.6, dampingFraction: 0.7), value: viewModel.activeTiles.count)
+    }
+    
+    // Solved group row - 4 tiles in a row
+    private func solvedGroupRow(_ group: SolvedGroup) -> some View {
+        VStack(alignment: .leading, spacing: .xxs) {
+            Text(group.category.uppercased())
+                .font(.appCaptionEmphasized)
+                .foregroundColor(Color.appTextSecondary)
+                .padding(.leading, .xs)
+            
+            LazyVGrid(columns: columns, spacing: .xs) {
+                ForEach(group.tiles, id: \.self) { tileText in
+                    Text(tileText)
+                        .font(.appCaption)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                        .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .frame(height: .gameTileHeight)
-                        .background(tile.isSelected ? Color.gray : Color.gray.opacity(0.2))
-                        .foregroundStyle(tile.isSelected ? .white : .primary)
+                        .background(Color.appSuccess)
                         .clipShape(RoundedRectangle(cornerRadius: .sm))
                 }
-                .buttonStyle(.plain)
-                .animation(.spring(duration: 0.2), value: tile.isSelected)
-                .accessibilityLabel("\(tile.text)")
-                .accessibilityAddTraits(tile.isSelected ? .isSelected : [])
+            }
+        }
+        .padding(.vertical, .xxs)
+    }
+    
+    // Active tiles grid - dynamic rows based on remaining tiles
+    private var activeTilesGrid: some View {
+        LazyVGrid(columns: columns, spacing: .sm) {
+            ForEach(viewModel.activeTiles) { tile in
+                tileButton(tile)
             }
         }
     }
     
-    private var solvedGroupsSection: some View {
-        VStack(spacing: .sm) {
-            ForEach(viewModel.solvedGroups) { group in
-                VStack(alignment: .leading, spacing: .xxs) {
-                    Text(group.category.uppercased())
-                        .font(.caption)
-                        .fontWeight(.bold)
-                        .foregroundColor(.secondary)
-                    
-                    HStack(spacing: .xs) {
-                        ForEach(group.tiles, id: \.self) { tileText in
-                            Text(tileText)
-                                .font(.system(size: 12, weight: .semibold))
-                                .foregroundColor(.white)
-                                .padding(.horizontal, .sm)
-                                .padding(.vertical, .xs)
-                                .frame(maxWidth: .infinity)
-                                .background(Color.blue)
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
-                        }
-                    }
-                }
-                .padding(.sm)
-                .background(Color.blue.opacity(0.1))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .transition(.move(edge: .top).combined(with: .opacity))
-            }
+    // Individual tile button
+    private func tileButton(_ tile: GameTile) -> some View {
+        Button {
+            viewModel.toggleSelection(tile)
+        } label: {
+            Text(tile.text)
+                .font(.appCaption)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+                .frame(maxWidth: .infinity)
+                .frame(height: .gameTileHeight)
+                .background(tile.isSelected ? Color.appPrimary : Color.appSurface)
+                .foregroundStyle(tile.isSelected ? Color.white : Color.appPrimary)
+                .clipShape(RoundedRectangle(cornerRadius: .sm))
+                .overlay(
+                    RoundedRectangle(cornerRadius: .sm)
+                        .stroke(Color.appPrimary, lineWidth: 2)
+                )
         }
-        .animation(.spring(), value: viewModel.solvedGroups.count)
+        .buttonStyle(.plain)
+        .animation(.spring(duration: 0.2), value: tile.isSelected)
+        .accessibilityLabel("\(tile.text)")
+        .accessibilityAddTraits(tile.isSelected ? .isSelected : [])
     }
     
     private var actionFooter: some View {
@@ -141,7 +163,7 @@ public struct ConnectionGameView: View {
                 }
             }
             
-            SecondaryButton("Deselect All") {
+            SecondaryButton("Deselect") {
                 viewModel.deselectAll()
             }
             

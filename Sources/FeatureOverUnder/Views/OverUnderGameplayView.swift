@@ -14,8 +14,7 @@ public struct OverUnderGameplayView: View {
             // MARK: - Header
             HStack {
                 Text("Over / Under")
-                    .font(.headline)
-                    .fontWeight(.bold)
+                    .font(.appHeadline)
                 
                 Spacer()
                 
@@ -26,19 +25,19 @@ public struct OverUnderGameplayView: View {
                         Text("\(viewModel.timeRemaining)")
                             .monospacedDigit()
                     }
-                    .foregroundColor(viewModel.timeRemaining < 10 ? .red : .primary)
+                    .foregroundColor(viewModel.timeRemaining < 10 ? Color.appError : Color.appTextPrimary)
                     
                     // Score
                     HStack(spacing: .xxs) {
                         Image(systemName: "trophy.fill")
-                            .foregroundColor(.yellow)
+                            .foregroundColor(Color.appWarning)
                         Text("\(viewModel.score)")
                             .monospacedDigit()
                     }
                 }
-                .font(.headline)
+                .font(.appHeadline)
             }
-            .padding()
+            .padding(.md)
             
             Spacer()
             
@@ -46,13 +45,13 @@ public struct OverUnderGameplayView: View {
             if let question = viewModel.currentQuestion {
                 VStack(spacing: .xs) {
                     Text(question.player)
-                        .font(.title3)
-                        .fontWeight(.bold)
+                        .font(.appTitle3)
+                        .foregroundStyle(Color.appTextPrimary)
                         .multilineTextAlignment(.center)
                     
                     Text("\(question.statContext) • \(question.team)")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
+                        .font(.appCallout)
+                        .foregroundColor(Color.appTextSecondary)
                         .multilineTextAlignment(.center)
                     
                     Spacer().frame(height: .spacerLarge)
@@ -62,16 +61,16 @@ public struct OverUnderGameplayView: View {
                         // Show Actual Value with Color
                         Text(formatValue(question.actualValue))
                             .font(.system(size: 60, weight: .black, design: .rounded))
-                            .foregroundColor(viewModel.lastGuessWasCorrect == true ? .green : .red)
+                            .foregroundColor(viewModel.lastGuessWasCorrect == true ? Color.appSuccess : Color.appError)
                             .transition(.scale.combined(with: .opacity))
                     } else {
                         // Show Line Value
                         Text(formatValue(question.lineValue))
                             .font(.system(size: 60, weight: .black, design: .rounded))
-                            .foregroundColor(.primary)
+                            .foregroundColor(Color.appTextPrimary)
                     }
                 }
-                .padding(.horizontal)
+                .padding(.horizontal, .md)
                 .animation(.spring(bounce: 0.3), value: viewModel.gameState)
             }
             
@@ -84,12 +83,11 @@ public struct OverUnderGameplayView: View {
                     viewModel.submitGuess(isOver: false)
                 } label: {
                     Text("UNDER")
-                        .font(.title2)
-                        .fontWeight(.heavy)
+                        .font(.appTitle2)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .frame(height: .gameButtonHeight)
-                        .background(Color.red)
+                        .background(Color.appError)
                         .cornerRadius(.md)
                 }
                 .disabled(viewModel.gameState != .playing)
@@ -100,21 +98,20 @@ public struct OverUnderGameplayView: View {
                     viewModel.submitGuess(isOver: true)
                 } label: {
                     Text("OVER")
-                        .font(.title2)
-                        .fontWeight(.heavy)
+                        .font(.appTitle2)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .frame(height: .gameButtonHeight)
-                        .background(Color.green)
+                        .background(Color.appSuccess)
                         .cornerRadius(.md)
                 }
                 .disabled(viewModel.gameState != .playing)
                 .opacity(viewModel.gameState != .playing ? 0.6 : 1.0)
             }
-            .padding(.horizontal)
+            .padding(.horizontal, .md)
             .padding(.bottom, .xl)
         }
-        .background(Color.white)
+        .background(Color.appBackground)
         .navigationDestination(isPresented: $viewModel.showSummary) {
             ScoreSummaryView(
                 score: viewModel.score,

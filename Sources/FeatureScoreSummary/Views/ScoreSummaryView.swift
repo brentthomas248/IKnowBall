@@ -1,13 +1,18 @@
 import SwiftUI
+import IKnowBallCore
+import IKnowBallDesignSystem
+import FeatureSettings
 
 public struct ScoreSummaryView: View {
     @State private var viewModel: ScoreSummaryViewModel
+    @State private var showLevelUp = false
+    @State private var newLevel: Int?
 
     public init(
         score: Int = 0,
         correctCount: Int = 0,
         missedCount: Int = 0,
-        xpGained: Int = 450,
+        metrics: XPCalculator.GameMetrics? = nil,
         onReplay: @escaping () -> Void = {},
         onHome: @escaping () -> Void = {}
     ) {
@@ -15,7 +20,8 @@ public struct ScoreSummaryView: View {
             score: score,
             correctCount: correctCount,
             missedCount: missedCount,
-            xpGained: xpGained
+            metrics: metrics,
+            shouldAwardXP: true  // Explicitly award XP when shown
         )
         vm.onReplayLevel = onReplay
         vm.onGoHome = onHome
@@ -23,84 +29,130 @@ public struct ScoreSummaryView: View {
     }
 
     public var body: some View {
-
-            VStack(spacing: 24) { // .lg spacing roughly
+        ZStack {
+            // Main content (scrollable to prevent level-up from hiding buttons)
+            ScrollView {
+                VStack(spacing: 24) { // .lg spacing roughly
                 // Header
                 Text("TIME'S UP!")
-                    .font(.largeTitle)
-                    .fontWeight(.heavy)
-                    .foregroundColor(.primary)
-                    .padding(.top, 32)
+                    .font(.appDisplayLarge)
+                    .foregroundColor(Color.appTextPrimary)
+                    .padding(.top, .xl)
                     .accessibilityAddTraits(.isHeader)
 
                 // Score Ring
                 ZStack {
                     Circle()
-                        .stroke(Color.green.opacity(0.3), lineWidth: 10)
+                        .stroke(Color.appSuccess.opacity(0.3), lineWidth: 10)
                         .squareFrame(.scoreSummaryIcon)
                     
                     Circle()
                         .trim(from: 0, to: viewModel.accuracy)
-                        .stroke(Color.green, style: StrokeStyle(lineWidth: 10, lineCap: .round))
+                        .stroke(Color.appSuccess, style: StrokeStyle(lineWidth: 10, lineCap: .round))
                         .rotationEffect(.degrees(-90))
                         .frame(width: 160, height: 160)
                         .animation(.easeOut(duration: 1.0), value: viewModel.accuracy)
 
-                    VStack(spacing: 4) {
+                    VStack(spacing: .xxs) {
                         Text(viewModel.accuracyFormatted)
-                            .font(.title)
-                            .bold()
-                            .foregroundColor(.primary)
+                            .font(.appTitle1)
+                            .foregroundColor(Color.appTextPrimary)
                         
                         Text(viewModel.scoreFormatted)
-                            .font(.headline)
-                            .foregroundColor(.secondary)
+                            .font(.appHeadline)
+                            .foregroundColor(Color.appTextSecondary)
                     }
                 }
-                .padding(.vertical, 24)
+                .padding(.vertical, .lg)
                 .accessibilityElement(children: .combine)
                 .accessibilityLabel("Score ring showing \(viewModel.accuracyFormatted) accuracy and \(viewModel.scoreFormatted)")
 
-                // XP Progress
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("+\(viewModel.xpGained) XP")
-                        .font(.headline)
-                        .foregroundColor(.green)
+                // XP Breakdown Section
+                VStack(alignment: .leading, spacing: .xs) {
+                    Text("XP Earned")
+                        .font(.appHeadline)
+                        .foregroundColor(Color.appTextPrimary)
                     
-                    ProgressView(value: viewModel.xpProgress)
-                        .tint(.green)
-                        .scaleEffect(x: 1, y: 2, anchor: .center) // Make it slightly thicker
-                        .accessibilityLabel("XP Progress Bar")
-                        .accessibilityValue("\(Int(viewModel.xpProgress * 100)) percent")
+                    Divider()
+                        .background(Color.appTextTertiary)
                     
-                    Text("Level 14 Progress...")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                    // Breakdown items with staggered animation
+                    ForEach(Array(viewModel.xpBreakdownItems.enumerated()), id: \.offset) { index, item in
+                        HStack {
+                            Text(item.0)
+                                .font(.appBody)
+                                .foregroundColor(Color.appTextSecondary)
+                            Spacer()
+                            Text("+\(item.1) XP")
+                                .font(.appBodyEmphasized)
+                                .foregroundColor(Color.appSuccess)
+                        }
+                        .opacity(1.0)
+                    }
+                    
+                    // Total separator
+                    Rectangle()
+                        .fill(Color.appPrimary)
+                        .frame(height: 2)
+                        .padding(.vertical, .xxs)
+                    
+                    // Total XP
+                    HStack {
+                        Text("Total")
+                            .font(.appHeadline)
+                            .foregroundColor(Color.appTextPrimary)
+                        Spacer()
+                        HStack(spacing: .xxs) {
+                            Text("+\(viewModel.xpGained)")
+                                .font(.appTitle2)
+                                .foregroundColor(Color.appSuccess)
+                            Text("XP")
+                                .font(.appHeadline)
+                                .foregroundColor(Color.appSuccess)
+                            Image(systemName: "sparkles")
+                                .foregroundColor(Color.appWarning)
+                        }
+                    }
+                    
+                    // Progress bar below total
+                    VStack(alignment: .leading, spacing: .xxs) {
+                        ProgressView(value: viewModel.xpProgress)
+                            .tint(Color.appSuccess)
+                            .scaleEffect(x: 1, y: 2, anchor: .center)
+                        
+                        Text("Level Progress")
+                            .font(.appCaption)
+                            .foregroundColor(Color.appTextSecondary)
+                    }
+                    .padding(.top, .xs)
                 }
-                .padding(.horizontal, 24)
+                .padding(.md)
+                .background(Color.appSurface)
+                .clipShape(RoundedRectangle(cornerRadius: .md))
+                .padding(.horizontal, .lg)
 
                 // Performance Section
-                VStack(spacing: 16) {
+                VStack(spacing: .md) {
                     Text("Performance")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
+                        .font(.appCallout)
+                        .foregroundColor(Color.appTextSecondary)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     
-                    HStack(spacing: 40) {
+                    HStack(spacing: .xl) {
                         Label {
                             Text("\(viewModel.correctCount) Correct")
-                                .font(.headline)
+                                .font(.appHeadline)
                         } icon: {
                             Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(.green)
+                                .foregroundColor(Color.appSuccess)
                         }
                         
                         Label {
                             Text("\(viewModel.missedCount) Missed")
-                                .font(.headline)
+                                .font(.appHeadline)
                         } icon: {
                             Image(systemName: "xmark.circle.fill")
-                                .foregroundColor(.red)
+                                .foregroundColor(Color.appError)
                         }
                     }
                     .accessibilityElement(children: .combine)
@@ -111,34 +163,34 @@ public struct ScoreSummaryView: View {
                     }) {
                         HStack {
                             Text("Review All Answers & Misses")
-                                .fontWeight(.semibold)
+                                .font(.appBody)
                             Spacer()
                             Image(systemName: "chevron.right")
                         }
-                        .padding()
-                        .background(Color.secondary.opacity(0.1))
-                        .foregroundColor(.primary)
-                        .cornerRadius(12)
+                        .padding(.md)
+                        .background(Color.appSurface)
+                        .foregroundColor(Color.appTextPrimary)
+                        .cornerRadius(.md)
                     }
-                    .frame(minHeight: 44)
+                    .frame(minHeight: .minimumTouchTarget)
                     .accessibilityLabel("Review all answers and misses")
                     .accessibilityHint("Double tap to see details of your game")
                 }
-                .padding(.horizontal, 24)
+                .padding(.horizontal, .lg)
 
                 Spacer()
 
                 // Bottom Actions
-                VStack(spacing: 12) {
+                VStack(spacing: .sm) {
                     Button(action: {
                         viewModel.replayLevel()
                     }) {
                         Text("Replay Level")
-                            .font(.headline)
-                            .foregroundColor(.primary)
+                            .font(.appHeadline)
+                            .foregroundColor(Color.appTextPrimary)
                             .frame(maxWidth: .infinity)
                             .frame(height: .buttonHeightCompact)
-                            .background(Color.secondary.opacity(0.15))
+                            .background(Color.appSurface)
                             .clipShape(Capsule())
                     }
                     .accessibilityLabel("Replay Level")
@@ -147,18 +199,35 @@ public struct ScoreSummaryView: View {
                         viewModel.goHome()
                     }) {
                         Text("Back to Home")
-                            .font(.headline)
+                            .font(.appHeadline)
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .frame(height: .buttonHeightCompact)
-                            .background(Color.black)
+                            .background(Color.appPrimary)
                             .clipShape(Capsule())
                     }
                     .accessibilityLabel("Back to Home")
                 }
-                .padding(.horizontal, 24)
-                .padding(.bottom, 16)
+                .padding(.horizontal, .lg)
+                .padding(.bottom, .md)
+            } // End VStack
+            } // End ScrollView
+            .scrollDisabled(showLevelUp)  // Disable scrolling when level-up is shown
+            
+            // Level-up celebration overlay
+            if showLevelUp, let level = newLevel {
+                LevelUpView(level: level) {
+                    showLevelUp = false
+                }
             }
+        }
+        .onAppear {
+            // Listen for level-up events
+            UserProfileService.shared.onLevelUp = { level in
+                newLevel = level
+                showLevelUp = true
+            }
+        }
     }
 }
 
